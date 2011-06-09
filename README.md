@@ -7,6 +7,10 @@ chef.vim is plugin which make it easy for
   * open `templates` and `files`
   * jump to `attributes` file
 
+Current status
+-----------------------------------------------------------------
+    Very Very BETA State
+
 Command
 -----------------------------------------------------------------
 
@@ -14,4 +18,8 @@ Command
 
 Keymap Example
 -----------------------------------------------------------------
-    TODO
+    au BufNewFile,BufRead /cookbooks/  call s:SetupChef()
+    function! s:SetupChef()
+        nnoremap <buffer> <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
+        nnoremap <buffer> <C-w><C-f> :split \| ChefEditRecipe <C-R><C-w><CR>
+    endfunction
