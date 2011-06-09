@@ -144,9 +144,10 @@ function! g:ChefFindAttribute(str) "{{{
     echo "can't find attribute file"
   else
     exe 'edit ' . candidates[0]
+    let searchword = ! empty(lis)  ? lis[-1] : target
     " case sensitive!!
     normal! gg
-    call search('\<\C:\?' . target . '\>', 'w')
+    call search('\<\C:\?' . searchword . '\>', 'w')
   endif
 endfunction "}}}
 
