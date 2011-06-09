@@ -97,20 +97,20 @@ function! g:ChefDoWhatIMean() "{{{
     " echo "source"
     let file = matchlist(line,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
     call g:ChefEditFile(file)
-  elseif line =~# '\<include_recipe\>' && expand('<cword>') !=# 'include_recipe'
-    " echo "include_recipe"
-    " let recipe_name = matchlist(line,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
-    call g:ChefEditRecipe(expand('<cword>'))
   elseif expand('<cWORD>') =~# '^node\['
     " echo "node"
     call g:ChefFindAttribute(expand('<cWORD>'))
   elseif expand('<cWORD>') =~# '^@node\['
     " echo "node"
     call g:ChefFindAttribute(expand('<cWORD>')[1:])
-  elseif expand('<cWORD>') =~# '^"#{node\['
+  elseif expand('<cWORD>') =~# '#{node\['
     let str = expand('<cWORD>')
     let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
     call g:ChefFindAttribute(nodestr)
+  elseif line =~# '\<include_recipe\>' && expand('<cword>') !=# 'include_recipe'
+    echo "include_recipe"
+    " let recipe_name = matchlist(line,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
+    call g:ChefEditRecipe(expand('<cword>'))
   elseif path =~# 'recipes/\w\+\.rb' || path =~# 'attributes/\w\+\.rb'
     " echo "recipes"
     call g:ChefEditRelated()
