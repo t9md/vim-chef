@@ -110,6 +110,9 @@ function! g:ChefDoWhatIMean() "{{{
     let str = expand('<cWORD>')
     let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
     call g:ChefFindAttribute(nodestr)
+  elseif expand('<cWORD>') =~# '<%=\s\?@\?node\['
+    let nodestr = matchlist(expand('<cWORD>'),'<%=\s\?\(.\{-}\)\s\?%>')[1]
+    call g:ChefFindAttribute(nodestr)
   elseif line =~# '\<include_recipe\>' && expand('<cword>') !=# 'include_recipe'
     echo "include_recipe"
     " let recipe_name = matchlist(line,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
