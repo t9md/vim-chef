@@ -66,3 +66,4 @@ TODO
 * -extract attribute in erb(`<%= attr %>`)-
 * -extract attribute in string interporation(`#{ attr }`)-
 * Refactor.  Eliminate global scope variable. DRY.
+* make each function return path then handle editing method 'split', 'edit' in controller.
