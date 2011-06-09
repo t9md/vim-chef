@@ -144,6 +144,8 @@ function! g:ChefEditRelated() "{{{
     let alter_file = '/' . join(tmp[:-2], "/") . "/default.rb"
     if filereadable(alter_file)
       execute 'edit ' . alter_file
+    else
+      echo "[" . type . "] not exist"
     endif
   else
     echo "[" . type . "] not exist"
@@ -186,16 +188,25 @@ function! g:ChefDoWhatIMean() "{{{
   let line = getline('.')
   let path = expand('%:p')
   if line =~# '\<source\>' && expand('<cword>') !=# 'source'
+    " echo "source"
     let file = matchlist(line,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
     call g:ChefEditFile(file)
   elseif line =~# '\<include_recipe\>' && expand('<cword>') !=# 'include_recipe'
+    " echo "include_recipe"
     " let recipe_name = matchlist(line,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
     call g:ChefEditRecipe(expand('<cword>'))
   elseif expand('<cWORD>') =~# '^node\['
+    " echo "node"
     call g:ChefFindAttribute(expand('<cWORD>'))
+  elseif expand('<cWORD>') =~# '^"#{node\['
+    let str = expand('<cWORD>')
+    let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
+    call g:ChefFindAttribute(nodestr)
   elseif path =~# 'recipes/\w\+\.rb' || path =~# 'attributes/\w\+\.rb'
+    " echo "recipes"
     call g:ChefEditRelated()
   elseif path =~# 'templates/\w\+' || path =~# 'files/\w\+'
+    " echo "templates"
     call g:ChefEditRelated()
   else
     echo "I don't know"
@@ -209,10 +220,7 @@ endfunction
 function! g:ChefFindAttribute(str) "{{{
   let lis = split(a:str, ']\|[')
   call  filter(lis, '!empty(v:val)')[1:]
-  " delete simbols char
   call map(lis, 's:cleanup_attr(v:val)')
-  " call map(lis, "v:val =~# '^:' ? v:val[1:] : v:val")
-  " delete 'node'
   call remove(lis,0)
   let recipe = remove(lis,0)
   let target = empty(lis) ? '' : remove(lis,0)
@@ -227,6 +235,8 @@ function! g:ChefFindAttribute(str) "{{{
     echo "can't find attribute file"
   else
     exe 'edit ' . candidates[0]
+    " case sensitive!!
+    call search('\<\C' . target . '\>', 'w')
   endif
 endfunction "}}}
 
