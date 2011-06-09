@@ -1,5 +1,5 @@
 "=============================================================================
-" File: underlinetag.vim
+" File: chef.vim
 " Author: t9md <taqumd@gmail.com>
 " Version: 0.01
 " WebPage: https://github.com/t9md/vim-chef
@@ -192,7 +192,7 @@ function! g:ChefFindAttribute(str)
   " delete 'node'
   call remove(lis,0)
   let recipe = remove(lis,0)
-  let target = remove(lis,0)
+  let target = empty(lis) ? '' : remove(lis,0)
 
   let path = expand('%:p')
   let dirs = split(path, '/')
