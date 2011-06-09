@@ -198,6 +198,9 @@ function! g:ChefDoWhatIMean() "{{{
   elseif expand('<cWORD>') =~# '^node\['
     " echo "node"
     call g:ChefFindAttribute(expand('<cWORD>'))
+  elseif expand('<cWORD>') =~# '^@node\['
+    " echo "node"
+    call g:ChefFindAttribute(expand('<cWORD>')[1:])
   elseif expand('<cWORD>') =~# '^"#{node\['
     let str = expand('<cWORD>')
     let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
@@ -236,7 +239,7 @@ function! g:ChefFindAttribute(str) "{{{
   else
     exe 'edit ' . candidates[0]
     " case sensitive!!
-    call search('\<\C' . target . '\>', 'w')
+    call search('\<\C:\?' . target . '\>', 'w')
   endif
 endfunction "}}}
 
