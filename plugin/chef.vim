@@ -16,10 +16,8 @@ let s:old_cpo = &cpo
 set cpo&vim
 " }}}
 
-" Init {{{
-"=================================================================
-"}}}
-
+" Trash:
+" {{{
 " let lis = [":abc", "def", ":ghh"]
 " call map(lis, 'v:val =~# "^:" ? v:val[1:] : v:val')
 " echo lis
@@ -92,8 +90,27 @@ set cpo&vim
   " execute 'edit ' . file
 " endfunction
 
+" call g:ChefEditRecipe('mysql')
+" finish
 
-function! g:ChefEditRelated()
+" let s1 = '  source "hostname.erb"'
+" let s2 = '  source("hostname.erb")'
+" let s3 = "  source 'hostname.erb'"
+" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
+" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
+" echo matchlist(s3,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
+" let s1 = 'include_recipe "mysql::server"'
+" echo matchlist(s1,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
+" let s1 = 'aa/recipes/hoge.rb'
+" let s2 = 'aa/attributes/hoge.rb'
+" echo s1 =~# '/(recipes)ibutes)]/\w\+\.rb'
+" echo s2 =~# '/attributes/\w\+\.rb'
+" finish
+" finish
+" finish
+" }}}
+
+function! g:ChefEditRelated() "{{{
   let path = expand('%:p')
   let dirs = split(path, '/')
 
@@ -122,12 +139,18 @@ function! g:ChefEditRelated()
   let alter_file = '/' . join(dirs, '/')
   if filereadable(alter_file)
     execute 'edit ' . alter_file
+  elseif type == 'attributes'
+    let tmp = split(alter_file,'/')
+    let alter_file = '/' . join(tmp[:-2], "/") . "/default.rb"
+    if filereadable(alter_file)
+      execute 'edit ' . alter_file
+    endif
   else
     echo "[" . type . "] not exist"
   endif
-endfunction
+endfunction "}}}
 
-function! g:ChefEditFile(...)
+function! g:ChefEditFile(...) "{{{
   let fname = len(a:000) ?  a:1 : expand('<cfile>')
   let path = expand('%:p')
 
@@ -143,9 +166,9 @@ function! g:ChefEditFile(...)
   else
     echo "not exist"
   endif
-endfunction
+endfunction "}}}
 
-function! g:ChefEditRecipe(name)
+function! g:ChefEditRecipe(name) "{{{
   let [recipe ;node_part ] = split(a:name, "::")
   let node = empty(node_part) ? 'default.rb' : node_part[0] . ".rb"
   let path = expand('%:p')
@@ -157,28 +180,9 @@ function! g:ChefEditRecipe(name)
   else
     echo "not exist"
   endif
-endfunction
+endfunction "}}}
 
-" call g:ChefEditRecipe('mysql')
-" finish
-
-" let s1 = '  source "hostname.erb"'
-" let s2 = '  source("hostname.erb")'
-" let s3 = "  source 'hostname.erb'"
-" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" echo matchlist(s3,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" let s1 = 'include_recipe "mysql::server"'
-" echo matchlist(s1,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" let s1 = 'aa/recipes/hoge.rb'
-" let s2 = 'aa/attributes/hoge.rb'
-" echo s1 =~# '/(recipes)ibutes)]/\w\+\.rb'
-" echo s2 =~# '/attributes/\w\+\.rb'
-" finish
-" finish
-" finish
-
-function! g:ChefDoWhatIMean()
+function! g:ChefDoWhatIMean() "{{{
   let line = getline('.')
   let path = expand('%:p')
   if line =~# '\<source\>' && expand('<cword>') !=# 'source'
@@ -196,13 +200,18 @@ function! g:ChefDoWhatIMean()
   else
     echo "I don't know"
   endif
+endfunction "}}}
+
+function! s:cleanup_attr(str)
+  return substitute(a:str,'[:"'']','','g')
 endfunction
 
-function! g:ChefFindAttribute(str)
+function! g:ChefFindAttribute(str) "{{{
   let lis = split(a:str, ']\|[')
   call  filter(lis, '!empty(v:val)')[1:]
   " delete simbols char
-  call map(lis, "v:val =~# '^:' ? v:val[1:] : v:val")
+  call map(lis, 's:cleanup_attr(v:val)')
+  " call map(lis, "v:val =~# '^:' ? v:val[1:] : v:val")
   " delete 'node'
   call remove(lis,0)
   let recipe = remove(lis,0)
@@ -219,7 +228,7 @@ function! g:ChefFindAttribute(str)
   else
     exe 'edit ' . candidates[0]
   endif
-endfunction
+endfunction "}}}
 
 " Command {{{
 "=================================================================
