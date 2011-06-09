@@ -16,100 +16,6 @@ let s:old_cpo = &cpo
 set cpo&vim
 " }}}
 
-" Trash:
-" {{{
-" let lis = [":abc", "def", ":ghh"]
-" call map(lis, 'v:val =~# "^:" ? v:val[1:] : v:val')
-" echo lis
-" " let s = ":abc"
-" let s = "abc"
-" if s =~# "^:"
-  " echo s[1:]
-" else
-  " echo s
-" endif
-" echo substitute(s,'\(\w\+\)\.vba\(\.gz\)\?','\1','')
-" function! g:ChefCookbookRoot()
-  " let path = expand('%:p')
-  " let dirs = split(path, '/')
-  " let idx = index(dirs, 'cookbooks')
-  " if idx == -1
-    " return ""
-  " else
-    " let recipe_name = dirs[idx+1]
-    " let cookbook_root = "/" . join(dirs[: idx],'/')
-    " return cookbook_root
-  " endif
-" endfunction
-
-" function! g:ChefRecipeName()
-  " let path = expand('%:p')
-  " " let path = "/etc/hosts/hoge/cookbooks/vagrant_main/recipes/default.rb"
-  " " " let dirs = split(path, '/')
-  " let dirs = split(path, '/')
-  " let idx = index(dirs, 'cookbooks')
-  " if idx == -1
-    " return ""
-  " else
-    " let recipe_name = dirs[idx+1]
-  " endif
-  " return recipe_name
-" endfunction
-
-" function! g:ChefFindFile(type, name, node, ...)
-  " let cookbook_root = g:ChefCookbookRoot()
-  " if empty(cookbook_root)
-    " return ""
-  " endif
-
-  " let result = [cookbook_root, a:name ]
-  " "definitions recipes
-  " if a:type == 'definitions' || a:type == 'recipes'
-    " call extend(result,[ a:type, a:node . ".rb" ])
-  " elseif a:type == 'templates'
-    " let template = a:1
-    " call extend(result,[ a:type , a:node , template ])
-  " else
-    " let file = a:1
-    " call extend(result,[ a:type , a:node , file ])
-  " endif
-  " return join(result,'/')
-  " " return result
-" endfunction
-
-" function! g:ChefEditRecipe(...)
-  " let node = len(a:000) ? a:1 : "default"
-  " echo g:ChefFindFile("recipes", g:ChefRecipeName(), node)
-" endfunction
-
-" function! g:ChefEditAttribute(...)
-  " let path = expand('%:p')
-  " let dirs = split(path, '/')
-  " let dirs[-2] = 'attributes'
-  " let file = '/' . join(dirs, '/')
-  " execute 'edit ' . file
-" endfunction
-
-" call g:ChefEditRecipe('mysql')
-" finish
-
-" let s1 = '  source "hostname.erb"'
-" let s2 = '  source("hostname.erb")'
-" let s3 = "  source 'hostname.erb'"
-" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" echo matchlist(s1,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" echo matchlist(s3,'\<source\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" let s1 = 'include_recipe "mysql::server"'
-" echo matchlist(s1,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
-" let s1 = 'aa/recipes/hoge.rb'
-" let s2 = 'aa/attributes/hoge.rb'
-" echo s1 =~# '/(recipes)ibutes)]/\w\+\.rb'
-" echo s2 =~# '/attributes/\w\+\.rb'
-" finish
-" finish
-" finish
-" }}}
-
 function! g:ChefEditRelated() "{{{
   let path = expand('%:p')
   let dirs = split(path, '/')
@@ -216,9 +122,9 @@ function! g:ChefDoWhatIMean() "{{{
   endif
 endfunction "}}}
 
-function! s:cleanup_attr(str)
+function! s:cleanup_attr(str) "{{{
   return substitute(a:str,'[:"'']','','g')
-endfunction
+endfunction "}}}
 
 function! g:ChefFindAttribute(str) "{{{
   let lis = split(a:str, ']\|[')
@@ -239,6 +145,7 @@ function! g:ChefFindAttribute(str) "{{{
   else
     exe 'edit ' . candidates[0]
     " case sensitive!!
+    normal! gg
     call search('\<\C:\?' . target . '\>', 'w')
   endif
 endfunction "}}}
@@ -249,12 +156,6 @@ command! -nargs=1 ChefEditRecipe   :call g:ChefEditRecipe(<f-args>)
 command! -nargs=? ChefEditFile     :call g:ChefEditFile(<f-args>)
 command! -nargs=? ChefEditRelated   :call g:ChefEditRelated()
 " }}}
-" nnoremap <M-e>      :<C-u>ChefEditFile<CR>
-" nnoremap <M-a>      :<C-u>ChefEditRelated<CR>
-" nnoremap <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
-" nnoremap <C-w><C-f> :split | ChefEditRelated <C-R><C-w><CR>
-" nnoremap <C-w><C-f> :split \| ChefEditRecipe <C-R><C-w><CR>
-" command! -nargs=? ChefEditAttribute :call g:ChefEditAttribute(<q-args>)
 
 let &cpo = s:old_cpo
 " vim: foldmethod=marker

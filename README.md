@@ -9,7 +9,9 @@ chef.vim is plugin which make it easy for
 
 Current status
 -----------------------------------------------------------------
-    Very Very BETA State
+
+Very Very *BETA* State
+use this plugin at your own risk.
 
 HOW to Use
 -----------------------------------------------------------------
@@ -22,7 +24,7 @@ in following examples, assume
 
     source "grants.sql.erb"
             ^^^^^^^^^^^^^^
-`<M-a>` try to open file under `templates/default/grants.sql`
+`<M-a>` try to open file under `templates/default/grants.sql.erb`
 
     source "grants.sql"
             ^^^^^^^^^^^^^^
@@ -30,7 +32,7 @@ in following examples, assume
 
 ## jump between attributes and recipes
 in buffer for file under `recipes/*` or `attributes/*`
-Press `<M-a>` to jumpe *alternate* files.
+Press `<M-a>` to jump *alternate* files.
 For examples, jump between `recipes/default.rb` and `attributes/default.rb`
 
 ## open recipe files
@@ -60,5 +62,6 @@ Keymap Example
 
 TODO
 -----------------------------------------------------------------
-* extract attribute in erb(`<%= attr %>`)
-* extract attribute in string interporation(`#{ attr }`)
+* -extract attribute in erb(`<%= attr %>`)-
+* -extract attribute in string interporation(`#{ attr }`)-
+* Refactor.  Eliminate global scope variable. DRY.
