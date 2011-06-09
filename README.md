@@ -53,6 +53,7 @@ Keymap Example
 -----------------------------------------------------------------
     au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
     function! s:SetupChef()
+        set isk+=!,?,:
         nnoremap <buffer> <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
         nnoremap <buffer> <C-w><C-f> :split \| ChefEditRecipe <C-R><C-w><CR>
     endfunction
