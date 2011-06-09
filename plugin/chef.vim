@@ -99,6 +99,8 @@ function! g:ChefEditRelated()
 
   let recipes_idx = index(dirs, 'recipes')
   let attributes_idx = index(dirs, 'attributes')
+  let templates_idx = index(dirs, 'templates')
+  let files_idx = index(dirs, 'files')
 
   if recipes_idx != -1
     let type = 'attributes'
@@ -106,6 +108,16 @@ function! g:ChefEditRelated()
   elseif attributes_idx != -1
     let type = 'recipes'
     let dirs[attributes_idx] = type
+  elseif templates_idx != -1
+    let type = 'recipes'
+    let dirs[templates_idx] = type
+    call remove(dirs, -1)
+    let dirs[-1] = dirs[-1] . '.rb'
+  elseif files != -1
+    let type = 'recipes'
+    let dirs[files_idx] = type
+    call remove(dirs, -1)
+    let dirs[-1] = dirs[-1] . '.rb'
   endif
   let alter_file = '/' . join(dirs, '/')
   if filereadable(alter_file)
@@ -178,6 +190,8 @@ function! g:ChefDoWhatIMean()
   elseif expand('<cWORD>') =~# '^node\['
     call g:ChefFindAttribute(expand('<cWORD>'))
   elseif path =~# 'recipes/\w\+\.rb' || path =~# 'attributes/\w\+\.rb'
+    call g:ChefEditRelated()
+  elseif path =~# 'templates/\w\+' || path =~# 'files/\w\+'
     call g:ChefEditRelated()
   else
     echo "I don't know"

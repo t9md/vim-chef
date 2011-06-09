@@ -57,3 +57,8 @@ Keymap Example
         nnoremap <buffer> <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
         nnoremap <buffer> <C-w><C-f> :split \| ChefEditRecipe <C-R><C-w><CR>
     endfunction
+
+TODO
+-----------------------------------------------------------------
+* extract attribute in erb(`<%= attr %>`)
+* extract attribute in string interporation(`#{ attr }`)
