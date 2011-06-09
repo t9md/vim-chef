@@ -13,6 +13,9 @@
 
 let g:loaded_underchef = 1
 let s:old_cpo = &cpo
+if ! exists('g:ChefEditCmd')
+  let g:ChefEditCmd  = 'edit '
+endif
 set cpo&vim
 " }}}
 
@@ -44,12 +47,12 @@ function! g:ChefEditRelated() "{{{
   endif
   let alter_file = '/' . join(dirs, '/')
   if filereadable(alter_file)
-    execute 'edit ' . alter_file
+    execute g:ChefEditCmd . ' ' . alter_file
   elseif type == 'attributes'
     let tmp = split(alter_file,'/')
     let alter_file = '/' . join(tmp[:-2], "/") . "/default.rb"
     if filereadable(alter_file)
-      execute 'edit ' . alter_file
+      execute g:ChefEditCmd . ' ' . alter_file
     else
       echo "[" . type . "] not exist"
     endif
@@ -70,7 +73,7 @@ function! g:ChefEditFile(...) "{{{
   let target = '/' . join(dirs[:idx+1] + [ type, 'default', fname], '/')
 
   if filereadable(target)
-    execute 'edit ' . target
+    execute  g:ChefEditCmd .  ' ' . target
   else
     echo "not exist"
   endif
@@ -84,7 +87,7 @@ function! g:ChefEditRecipe(name) "{{{
   let idx = index(dirs, 'cookbooks')
   let target = "/" . join(dirs[: idx] + [recipe, "recipes", node ] ,'/')
   if filereadable(target)
-    execute 'edit ' . target
+    execute g:ChefEditCmd . ' ' . target
   else
     echo "not exist"
   endif
@@ -143,7 +146,7 @@ function! g:ChefFindAttribute(str) "{{{
   if empty(candidates)
     echo "can't find attribute file"
   else
-    exe 'edit ' . candidates[0]
+    exe g:ChefEditCmd . ' ' . candidates[0]
     let searchword = ! empty(lis)  ? lis[-1] : target
     " case sensitive!!
     normal! gg
