@@ -63,13 +63,9 @@ endfunction
 let c = s:Controller
 
 function! c.main() "{{{2
-    " setup envrionment
-    let self.env = s:Environment.new()
+    " let self.env = s:Environment.new()
     let env = s:Environment.new()
-    let cut = len(self.env.cookbook_root) + 1
-
-    " extract node then find
-    let line = getline('.')
+    let cut = len(env.cookbook_root) + 1
 
     "#### `source'
     let fpath = self.findSource(env)
@@ -81,33 +77,33 @@ function! c.main() "{{{2
 
     "### extract attributes
     if expand('<cWORD>') =~# '^node\['
-        call self.FindAttributes(expand('<cWORD>'))
+        call self.FindAttributes(env, expand('<cWORD>'))
         return
     elseif expand('<cWORD>') =~# '^@node\['
         " echo "node"
-        call self.FindAttributes(expand('<cWORD>')[1:])
+        call self.FindAttributes(env, expand('<cWORD>')[1:])
         return
     elseif expand('<cWORD>') =~# '#{node\['
         let str = expand('<cWORD>')
         let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
-        call self.FindAttributes(nodestr)
+        call self.FindAttributes(env, nodestr)
         return
     elseif expand('<cWORD>') =~# '<%=\s\?@\?node\['
         let nodestr = matchlist(expand('<cWORD>'),'<%=\s\?\(.\{-}\)\s\?%>')[1]
-        call self.FindAttributes(nodestr)
+        call self.FindAttributes(env, nodestr)
         return
     endif
 
     "### include_recipe
     " echo '[ recipe ] ' . fpath[ cut : ]
-    let fpath = self.RecipePath()
+    let fpath = self.findRecipe(env)
     if filereadable(fpath)
         execute g:ChefEditCmd . ' ' . fpath
         return
     endif
 
     "### jump between attributes and recipes
-    let fpath = self.RelatedPath()
+    let fpath = self.RelatedPath(env)
     " echo '[ related ] ' . fpath[ cut : ]
     if filereadable(fpath)
         execute g:ChefEditCmd . ' ' . fpath
@@ -150,21 +146,19 @@ function! c.findSource(e) "{{{2
     return join([a:e.recipe_root , type, 'default' , a:e.cfile ], '/')
 endfunction
 
-function! c.RecipePath() "{{{2
-    let cword = self.env.cword
-    if !(self.env.line =~# '\<include_recipe\>' && cword !=# 'include_recipe')
+function! c.findRecipe(e) "{{{2
+    if !(a:e.line =~# '\<include_recipe\>' && a:e.cword !=# 'include_recipe')
         return ""
     endif
-    let fname = cword
-    let [recipe ;node_part ] = split(fname, "::")
+    let [recipe ;node_part ] = split(a:e.cword, "::")
     let node = empty(node_part) ? 'default.rb' : node_part[0] . ".rb"
-    return join([self.env.recipe_root, "recipes", node ], '/')
+    return join([a:e.recipe_root, "recipes", node ], '/')
 endfunction
 
-function! c.RelatedPath() "{{{2
-    let dirs = split(self.env.path, '/')
-    let type_name = self.env.type_name
-    let type_idx  = self.env.type_idx
+function! c.RelatedPath(e) "{{{2
+    let dirs = split(a:e.path, '/')
+    let type_name = a:e.type_name
+    let type_idx  = a:e.type_idx
 
     if     type_name == 'recipes'
         let dirs[type_idx] = "attributes"
