@@ -68,9 +68,9 @@ function! c.main() "{{{2
     let cut = len(env.cookbook_root) + 1
 
     "#### `source'
-    let fpath = self.findSource(env)
     " echo '[ source ] ' . fpath[ cut : ]
-    if filereadable(fpath)
+    let fpath = self.findSource(env)
+    if !empty(fpath)
         execute g:ChefEditCmd . ' ' . fpath
         return
     endif
@@ -83,15 +83,15 @@ function! c.main() "{{{2
     "### include_recipe
     " echo '[ recipe ] ' . fpath[ cut : ]
     let fpath = self.findRecipe(env)
-    if filereadable(fpath)
+    if !empty(fpath)
         execute g:ChefEditCmd . ' ' . fpath
         return
     endif
 
     "### jump between attributes and recipes
-    let fpath = self.findRelated(env)
     " echo '[ related ] ' . fpath[ cut : ]
-    if filereadable(fpath)
+    let fpath = self.findRelated(env)
+    if !empty(fpath)
         execute g:ChefEditCmd . ' ' . fpath
         return
     endif
@@ -133,12 +133,14 @@ function! c.findAttributes(e) "{{{2
 
     if empty(candidates)
         echo "can't find attribute file"
+        return -1
     else
         exe g:ChefEditCmd . ' ' . candidates[0]
         let searchword = ! empty(lis)  ? lis[-1] : target
         " case sensitive!!
         normal! gg
         call search('\<\C:\?' . searchword . '\>', 'w')
+        return 1
     endif
 endfunction
 
@@ -147,7 +149,8 @@ function! c.findSource(e) "{{{2
         return ""
     endif
     let type = fnamemodify(a:e.cfile, ":p:e") == 'erb' ? 'templates' : 'files'
-    return join([a:e.recipe_root , type, 'default' , a:e.cfile ], '/')
+    let fpath = join([a:e.recipe_root , type, 'default' , a:e.cfile ], '/')
+    if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
 
 function! c.findRecipe(e) "{{{2
@@ -156,7 +159,8 @@ function! c.findRecipe(e) "{{{2
     endif
     let [recipe ;node_part ] = split(a:e.cword, "::")
     let node = empty(node_part) ? 'default.rb' : node_part[0] . ".rb"
-    return join([a:e.recipe_root, "recipes", node ], '/')
+    let fpath = join([a:e.recipe_root, "recipes", node ], '/')
+    if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
 
 function! c.findRelated(e) "{{{2
@@ -168,15 +172,16 @@ function! c.findRelated(e) "{{{2
         let dirs[type_idx] = "attributes"
     elseif type_name == 'attributes'
         let dirs[type_idx] = "recipes"
-    " elseif type_name == 'templates' || type_name == 'files'
-    elseif type_name =~# '^templates$\|^files$'
-        let dirs[type_idx] = "recipes"
-        call remove(dirs, -1)
-        let dirs[-1] = dirs[-1] . '.rb'
+        " elseif type_name == 'templates' || type_name == 'files'
     endif
+    " elseif type_name =~# '^templates$\|^files$'
+        " let dirs[type_idx] = "recipes"
+        " call remove(dirs, -1)
+        " let dirs[-1] = dirs[-1] . '.rb'
+    " endif
 
     let fpath = '/' . join(dirs, '/')
-    return fpath
+    if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
 
 " Command: {{{1
@@ -185,7 +190,5 @@ command! ChefDoWhatIMean :call s:Controller.main()
 
 " Finalize: {{{1
 "=================================================================
-" let g:ChefEditCmd = 'echo '
-" call s:Controller.main()
 let &cpo = s:old_cpo
 " vim: set sw=4 sts=4 et fdm=marker fdc=3 fdl=3:
