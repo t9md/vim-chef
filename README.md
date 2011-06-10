@@ -58,10 +58,8 @@ Keymap Example
         set isk+=!,?,:
         " default ChefEditCmd is 'edit '
         let g:ChefEditCmd  = 'split '
-        nnoremap <buffer> <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
-        nnoremap <buffer> <M-a>      :<C-u>call g:ChefDoWhatIMean()<CR>
-        nnoremap <buffer> <C-w><C-a> :split \| call g:ChefDoWhatIMean()<CR>
-        nnoremap <buffer> <C-w><C-f> :split \| ChefEditRecipe <C-R><C-w><CR>
+
+        nnoremap <buffer> <M-a>      :<C-u>ChefDoWhatIMean<CR>
     endfunction
 
 TODO

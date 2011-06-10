@@ -76,21 +76,7 @@ function! c.main() "{{{2
     endif
 
     "### extract attributes
-    if expand('<cWORD>') =~# '^node\['
-        call self.FindAttributes(env, expand('<cWORD>'))
-        return
-    elseif expand('<cWORD>') =~# '^@node\['
-        " echo "node"
-        call self.FindAttributes(env, expand('<cWORD>')[1:])
-        return
-    elseif expand('<cWORD>') =~# '#{node\['
-        let str = expand('<cWORD>')
-        let nodestr = matchlist(str,'#{\(.\{-}\)\}')[1]
-        call self.FindAttributes(env, nodestr)
-        return
-    elseif expand('<cWORD>') =~# '<%=\s\?@\?node\['
-        let nodestr = matchlist(expand('<cWORD>'),'<%=\s\?\(.\{-}\)\s\?%>')[1]
-        call self.FindAttributes(env, nodestr)
+    if self.findAttributes(env)
         return
     endif
 
@@ -103,7 +89,7 @@ function! c.main() "{{{2
     endif
 
     "### jump between attributes and recipes
-    let fpath = self.RelatedPath(env)
+    let fpath = self.findRelated(env)
     " echo '[ related ] ' . fpath[ cut : ]
     if filereadable(fpath)
         execute g:ChefEditCmd . ' ' . fpath
@@ -111,31 +97,49 @@ function! c.main() "{{{2
     endif
 endfunction 
 
-function! s:cleanup_attr(str) "{{{
+function! s:cleanup_attr(str) "{{{2
   return substitute(a:str,'[:"'']','','g')
-endfunction "}}}
+endfunction
 
-function! c.FindAttributes(str) "{{{2
-  let lis = split(a:str, ']\|[')
-  call  filter(lis, '!empty(v:val)')[1:]
-  call map(lis, 's:cleanup_attr(v:val)')
-  call remove(lis,0)
-  let recipe = remove(lis,0)
-  let target = empty(lis) ? '' : remove(lis,0)
-  
-  let base = join([self.env.recipe_root, 'attributes'], '/')
-  " let base = "/" . join(dirs[: idx] + [recipe, 'attributes'] ,'/')
-  let candidates = map([target, 'default'], 'base . "/" . v:val . ".rb"')
-  call filter(candidates, 'filereadable(v:val)')
-  if empty(candidates)
-    echo "can't find attribute file"
-  else
-    exe g:ChefEditCmd . ' ' . candidates[0]
-    let searchword = ! empty(lis)  ? lis[-1] : target
-    " case sensitive!!
-    normal! gg
-    call search('\<\C:\?' . searchword . '\>', 'w')
-  endif
+function! s:extract_attribute(str) "{{{2
+    try
+        if a:str =~# '^@\?node\['
+            return matchlist(a:str,'^@\?\(.*\)')[1]
+        elseif a:str =~# '#{node\[.*\}'
+            return matchlist(a:str,'#{\(.\{-}\)\}')[1]
+        elseif a:str =~# '<%=\s\?@\?node\[.*%>'
+            return matchlist(a:str, '<%=\s\?@\?\(.\{-}\)\s\?%>')[1]
+        endif
+    catch /E684/
+        return ""
+    endtry
+endfunction
+
+function! c.findAttributes(e) "{{{2
+    let attr = s:extract_attribute(a:e.cWORD)
+    if empty(attr)
+        return
+    endif
+    let lis = split(attr, ']\|[')
+    call filter(lis, '!empty(v:val)')[1:]
+    call map(lis, 's:cleanup_attr(v:val)')
+    call remove(lis,0)
+    let  recipe = remove(lis,0)
+    let  target = empty(lis) ? '' : remove(lis,0)
+
+    let base = join([a:e.recipe_root, 'attributes'], '/')
+    let candidates = map([target, 'default'], 'base . "/" . v:val . ".rb"')
+    call filter(candidates, 'filereadable(v:val)')
+
+    if empty(candidates)
+        echo "can't find attribute file"
+    else
+        exe g:ChefEditCmd . ' ' . candidates[0]
+        let searchword = ! empty(lis)  ? lis[-1] : target
+        " case sensitive!!
+        normal! gg
+        call search('\<\C:\?' . searchword . '\>', 'w')
+    endif
 endfunction
 
 function! c.findSource(e) "{{{2
@@ -155,7 +159,7 @@ function! c.findRecipe(e) "{{{2
     return join([a:e.recipe_root, "recipes", node ], '/')
 endfunction
 
-function! c.RelatedPath(e) "{{{2
+function! c.findRelated(e) "{{{2
     let dirs = split(a:e.path, '/')
     let type_name = a:e.type_name
     let type_idx  = a:e.type_idx
