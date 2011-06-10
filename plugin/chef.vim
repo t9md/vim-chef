@@ -62,9 +62,10 @@ endfunction
 "=================================================================
 let c = s:Controller
 
-function! c.main() "{{{2
+function! c.main(...) "{{{2
     " let self.env = s:Environment.new()
     let env = s:Environment.new()
+    let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
     let cut = len(env.cookbook_root) + 1
 
     "### extract attributes
@@ -75,7 +76,7 @@ function! c.main() "{{{2
     for Func in ['findSource', 'findRecipe', 'findRelated']
         let fpath = call(self[Func], [env], self)
         if !empty(fpath)
-            execute g:ChefEditCmd . ' ' . fpath
+            execute env.editcmd . ' ' . fpath
             return
         endif
     endfor
@@ -119,12 +120,14 @@ function! c.findAttributes(e) "{{{2
         echo "can't find attribute file"
         return -1
     else
-        exe  g:ChefEditCmd . ' ' . candidates[0]
+        exe 'silent ' . a:e.editcmd . ' ' . candidates[0]
 
         let searchword = ! empty(lis)  ? lis[-1] : target
         keepjump normal! gg
         " case sensitive!!
-        call search('\<\C:\?' . searchword . '\>', 'w')
+        if !search('\<\C:\?' . searchword . '\>', 'w')
+            echo "couldn't find " . searchword
+        end
         " let search_pattern = '\<\C:\?' . searchword . '\>'
         " call cursor(searchpos(search_pattern, 'n'))
         return 1
@@ -175,7 +178,8 @@ endfunction
 
 " Command: {{{1
 "=================================================================
-command! ChefDoWhatIMean :call s:Controller.main()
+command! ChefDoWhatIMean      :call s:Controller.main()
+command! ChefDoWhatIMeanSplit :call s:Controller.main('split')
 
 " Finalize: {{{1
 "=================================================================
