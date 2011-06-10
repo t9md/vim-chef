@@ -67,34 +67,18 @@ function! c.main() "{{{2
     let env = s:Environment.new()
     let cut = len(env.cookbook_root) + 1
 
-    "#### `source'
-    " echo '[ source ] ' . fpath[ cut : ]
-    let fpath = self.findSource(env)
-    if !empty(fpath)
-        execute g:ChefEditCmd . ' ' . fpath
-        return
-    endif
-
     "### extract attributes
     if self.findAttributes(env)
         return
     endif
 
-    "### include_recipe
-    " echo '[ recipe ] ' . fpath[ cut : ]
-    let fpath = self.findRecipe(env)
-    if !empty(fpath)
-        execute g:ChefEditCmd . ' ' . fpath
-        return
-    endif
-
-    "### jump between attributes and recipes
-    " echo '[ related ] ' . fpath[ cut : ]
-    let fpath = self.findRelated(env)
-    if !empty(fpath)
-        execute g:ChefEditCmd . ' ' . fpath
-        return
-    endif
+    for Func in ['findSource', 'findRecipe', 'findRelated']
+        let fpath = call(self[Func], [env], self)
+        if !empty(fpath)
+            execute g:ChefEditCmd . ' ' . fpath
+            return
+        endif
+    endfor
 endfunction 
 
 function! s:cleanup_attr(str) "{{{2
@@ -135,11 +119,14 @@ function! c.findAttributes(e) "{{{2
         echo "can't find attribute file"
         return -1
     else
-        exe g:ChefEditCmd . ' ' . candidates[0]
+        exe  g:ChefEditCmd . ' ' . candidates[0]
+
         let searchword = ! empty(lis)  ? lis[-1] : target
+        keepjump normal! gg
         " case sensitive!!
-        normal! gg
         call search('\<\C:\?' . searchword . '\>', 'w')
+        " let search_pattern = '\<\C:\?' . searchword . '\>'
+        " call cursor(searchpos(search_pattern, 'n'))
         return 1
     endif
 endfunction
@@ -173,6 +160,8 @@ function! c.findRelated(e) "{{{2
     elseif type_name == 'attributes'
         let dirs[type_idx] = "recipes"
         " elseif type_name == 'templates' || type_name == 'files'
+    else
+        return ""
     endif
     " elseif type_name =~# '^templates$\|^files$'
         " let dirs[type_idx] = "recipes"
