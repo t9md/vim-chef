@@ -114,7 +114,7 @@ function! g:ChefDoWhatIMean() "{{{
     let nodestr = matchlist(expand('<cWORD>'),'<%=\s\?\(.\{-}\)\s\?%>')[1]
     call g:ChefFindAttribute(nodestr)
   elseif line =~# '\<include_recipe\>' && expand('<cword>') !=# 'include_recipe'
-    echo "include_recipe"
+    " echo "include_recipe"
     " let recipe_name = matchlist(line,'\<include_recipe\>[ |\(]\s*["'']\(.*\)["'']')[1]
     call g:ChefEditRecipe(expand('<cword>'))
   elseif path =~# 'recipes/\w\+\.rb' || path =~# 'attributes/\w\+\.rb'
@@ -151,9 +151,11 @@ function! g:ChefFindAttribute(str) "{{{
   else
     exe g:ChefEditCmd . ' ' . candidates[0]
     let searchword = ! empty(lis)  ? lis[-1] : target
-    " case sensitive!!
     normal! gg
-    call search('\<\C:\?' . searchword . '\>', 'w')
+    " case sensitive!!
+    let search_pattern = '\<\C:\?' . searchword . '\>'
+    call cursor(searchpos(searchpos,'w'))
+    " call search('\<\C:\?' . searchword . '\>', 'w')
   endif
 endfunction "}}}
 
