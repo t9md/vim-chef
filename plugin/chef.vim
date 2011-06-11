@@ -26,8 +26,9 @@ endif
 
 " Command: {{{1
 "=================================================================
-command! ChefDoWhatIMean      :call chef#controller#main()
-command! ChefDoWhatIMeanSplit :call chef#controller#main('split')
+command! ChefDoWhatIMean       :call chef#controller#main()
+command! ChefDoWhatIMeanSplit  :call chef#controller#main('split')
+command! ChefDoWhatIMeanVsplit :call chef#controller#main('vsplit')
 
 " Finalize: {{{1
 "=================================================================

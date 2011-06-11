@@ -10,7 +10,7 @@ function! s:Controller.main(...) "{{{1
         let &iskeyword = org_iskeyword
     endtry
 
-    let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
+    let env.editcmd = a:0 ? a:1 : "edit"
 
     " let finders = [
                 " \ chef#finder#attribute#new(),

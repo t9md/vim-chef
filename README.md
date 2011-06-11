@@ -7,12 +7,6 @@ chef.vim is plugin which make it easy for
   * open `templates` and `files`
   * jump to `attributes` file
 
-Current status
------------------------------------------------------------------
-
-Very Very *BETA* State
-use this plugin at your own risk.
-
 HOW to Use
 -----------------------------------------------------------------
 in following examples, assume
@@ -51,14 +45,19 @@ For examples, jump between `recipes/default.rb` and `attributes/default.rb`
 1. apache2/attribute/address.rb
 2. apache2/attribute/default.rb
 
+Limitation
+-----------------------------------------------------------------
+chef.vim assume cookbooks is reside under the directory name of 'cookbooks',  
+so cookboooks in either 'my_cookbooks' nor 'cookbooks_sample' work.
+
+
 Keymap Example
 -----------------------------------------------------------------
 
     au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
     function! s:SetupChef()
-        let g:ChefEditCmd  = 'edit '
         nnoremap <buffer> <silent> <M-a>      :<C-u>ChefDoWhatIMean<CR>
-        nnoremap <buffer> <silent> <M-f>      :<C-u>ChefDoWhatIMeanSplit<CR>
+        nnoremap <buffer> <silent> <C-w><C-f> :<C-u>ChefDoWhatIMeanSplit<CR>
     endfunction
 
 TODO

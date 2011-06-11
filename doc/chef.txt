@@ -1,0 +1,119 @@
+*chef.txt*	plugin for opscode's chef. find attribute, open recipes etc.
+
+Version: 0.5
+Author : t9md <taqumd@gmail.com>
+
+==============================================================================
+CONTENTS					*chef-contents*
+
+Introduction					|chef-introduction|
+Usage						|chef-usage|
+Commands					|chef-commands|
+Configuration					|chef-config|
+Variables					|chef-variables|
+Notes						|chef-notes|
+ToDo						|chef-todo|
+Bugs						|chef-bugs|
+Changelog					|chef-changelog|
+
+==============================================================================
+INTRODUCTION					*chef-introduction*
+
+chef.vim is plugin which make it easy for
+
+  * jump between `attributes` and `recipes`
+  * open `recipes` by extract filename from `include_recipe`
+  * open `templates` and `files`
+  * jump to `attributes` file
+
+Latest Version:
+https://github.com/t9md/vim-chef
+
+==============================================================================
+COMMANDS						*chef-commands*
+
+:ChefDoWhatIMean					 :ChefDoWhatIMean
+
+This command do everything |chef| provides, rest two command is identical 
+except the way opening files.
+
+:ChefDoWhatIMeanSplit					 :ChefDoWhatIMeanSplit
+
+:ChefDoWhatIMeanVsplit					 :ChefDoWhatIMeanVsplit
+
+==============================================================================
+USAGE							*chef-usage*
+
+in following examples, assume~
+
+* `<M-a>` is mapped to |:ChefDoWhatIMean|
+* `^` indicate cursor position
+
+## jump to node's attribute~
+>
+    node[:apache2][:address] = node[:nova][:my_ip]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+<
+`<M-a>` extract string which look like node's attribute then try to open attribute.
+
+## open templates~
+open in `recipes/default.rb' then position cursor to
+>
+    source "grants.sql.erb"
+            ^^^^^^^^^^^^^^
+<	    
+`<M-a>`, try to open file under `templates/default/grants.sql.erb`
+
+## open files~
+>
+    source "grants.sql"
+            ^^^^^^^^^^^^^^
+<
+`<M-a>` try to open file under `files/default/grants.sql`
+
+## jump between attributes and recipes~
+
+in buffer for file under `recipes/*` or `attributes/*`
+Press `<M-a>` to jump *alternate* files.
+For examples, jump between `recipes/default.rb` and `attributes/default.rb`
+
+## open recipe files~
+>
+    include_recipe "nova::mysql"
+                    ^^^^^^^^^^
+<
+`<M-a>` try to open `cookbooks/nova/recipes/mysql.rb`
+
+==============================================================================
+CONFIGURATION						*underlinetag-keymap*
+>
+    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
+    function! s:SetupChef()
+        let g:ChefEditCmd  = 'edit '
+        nnoremap <buffer> <silent> <M-a>      :<C-u>ChefDoWhatIMean<CR>
+        nnoremap <buffer> <silent> <M-f>      :<C-u>ChefDoWhatIMeanSplit<CR>
+    endfunction
+
+==============================================================================
+VARIABLES						 *chef-variables*
+
+==============================================================================
+NOTES								*chef-notes*
+
+chef.vim assume cookbooks is reside under the directory name of 'cookbooks',  
+so cookboooks in either 'my_cookbooks' nor 'cookbooks_sample' work.
+
+==============================================================================
+TODO							*chef-todo*
+* support definition finding with DefinitonFinder
+
+==============================================================================
+BUGS							*chef-bugs*
+
+==============================================================================
+CHANGELOG						*chef-changelog*
+
+0.5	2011-06-12
+	- First release
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
