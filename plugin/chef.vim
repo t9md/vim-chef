@@ -20,73 +20,12 @@ set cpo&vim
 if ! exists('g:ChefEditCmd')
   let g:ChefEditCmd  = 'edit '
 endif
-
-" Controller: {{{1
-"=================================================================
-let s:Controller  = {}
-function! s:Controller.main(...) "{{{2
-    let env = s:Environment.new()
-    let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
-    let cut = len(env.cookbook_root) + 1
-
-    let finders = [
-                \ chef#finder#attribute#new(),
-                \ chef#finder#source#new(),
-                \ chef#finder#recipe#new(),
-                \ chef#finder#related#new(),
-                \ ]
-
-    for finder in finders
-        try
-            let fpath =  finder.call(env)
-            if !empty(fpath)
-                execute env.editcmd . ' ' . fpath
-                return
-            endif
-        catch /FinderComplete/
-            echo v:exception
-            break
-        endtry
-    endfor
-endfunction 
-
-" Environment: {{{1
-"=================================================================
-let s:Environment = {}
-function! s:Environment.new() "{{{2
-    let path = expand('%:p')
-    let dirs = split(path, '/')
-    let types = ['recipes', 'attributes', 'templates', 'files']
-    let type_name = "NONE"
-    let type_idx  = -1
-    for type in types
-        let idx = index(dirs, type)
-        if idx != -1
-            let type_name = type
-            let type_idx = idx
-            break
-        endif
-    endfor
-
-    let o =  {
-                \ 'line': getline('.'),
-                \ 'cword': expand('<cword>'),
-                \ 'cWORD': expand('<cWORD>'),
-                \ 'cfile': expand('<cfile>'),
-                \ 'path': path,
-                \ 'recipe_name': dirs[index(dirs, 'cookbooks')+1],
-                \ 'type_name': type_name,
-                \ 'type_idx': type_idx,
-                \ }
-    let o.cookbook_root = '/' . join(dirs[0: index(dirs, 'cookbooks')], '/')
-    let o.recipe_root = join([o.cookbook_root , o.recipe_name ], '/')
-    return o
-endfunction
+let g:ChefDebug = 0
 
 " Command: {{{1
 "=================================================================
-command! ChefDoWhatIMean      :call s:Controller.main()
-command! ChefDoWhatIMeanSplit :call s:Controller.main('split')
+command! ChefDoWhatIMean      :call chef#controller#main()
+command! ChefDoWhatIMeanSplit :call chef#controller#main('split')
 
 " Finalize: {{{1
 "=================================================================
