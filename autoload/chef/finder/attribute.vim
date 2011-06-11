@@ -9,6 +9,7 @@ function s:finder.condition(e)  "{{{1
 endfunction
 
 function s:finder.find(e) "{{{1
+    " FIXME: node entry scraping have BUG. should be fixed
     let lis = split(a:e.attr, ']\|[')
     call filter(lis, '!empty(v:val)')[1:]
     call map(lis, 's:cleanup_attr(v:val)')
