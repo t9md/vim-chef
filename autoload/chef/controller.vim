@@ -1,8 +1,8 @@
 let s:Controller  = {}
+
 function! s:Controller.main(...)
     let env = chef#environment#new()
     let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
-    let cut = len(env.cookbook_root) + 1
 
     let finders = [
                 \ chef#finder#attribute#new(),
@@ -12,18 +12,13 @@ function! s:Controller.main(...)
                 \ ]
 
     for finder in finders
+        if g:ChefDebug
+            echo finder.id
+        endif
         try
-            if !finder.condition(env)
-                continue
-            endif
-            let fpath = finder.find(env)
-            if !empty(fpath)
-                if g:ChefDebug
-                    echo finder.id
-                    echo fpath
-                endif
-                execute env.editcmd . ' ' . fpath
-                return
+            if finder.condition(env)
+                call finder.find(env)
+                break
             endif
         catch /FinderComplete/
             echo v:exception
@@ -34,5 +29,4 @@ endfunction
 
 function! chef#controller#main(...)
     call call(s:Controller.main, a:000, s:Controller)
-    " call s:Controller.main(a:000)
 endfunction

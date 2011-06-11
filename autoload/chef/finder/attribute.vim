@@ -32,7 +32,7 @@ function s:finder.find(e)
         endif
         " let search_pattern = '\<\C:\?' . searchword . '\>'
         " call cursor(searchpos(search_pattern, 'n'))
-        throw 'FinderComplete'
+        " throw 'FinderComplete'
         return 1
     endif
 endfunction
@@ -55,9 +55,11 @@ function! s:extract_attribute(str) "{{{2
     endtry
 endfunction
 
+
+
+
+
 function! chef#finder#attribute#new()
-  " let o = g:ChefFinder.new("AttributeFinder", s:finder)
-  let o = chef#finder#new("AttributeFinder", s:finder)
-  return o
+  return chef#finder#new("AttributeFinder", s:finder)
 endfunction
 

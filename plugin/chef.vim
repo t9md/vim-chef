@@ -20,7 +20,7 @@ set cpo&vim
 if ! exists('g:ChefEditCmd')
   let g:ChefEditCmd  = 'edit '
 endif
-let g:ChefDebug = 0
+let g:ChefDebug = 1
 
 " Command: {{{1
 "=================================================================

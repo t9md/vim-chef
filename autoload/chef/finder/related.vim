@@ -13,12 +13,12 @@ function s:finder.find(e)
         return ""
     endif
     let fpath = '/' . join(dirs, '/')
-    if filereadable(fpath) | return fpath | else | return "" | endif
+    if filereadable(fpath)
+        execute a:e.editcmd . ' ' . fpath
+    endif
 endfunction
 
 function! chef#finder#related#new()
-  " let o = g:ChefFinder.new("RelatedFinder", s:finder)
-  let o = chef#finder#new("RelatedFinder", s:finder)
-  return o
+  return chef#finder#new("RelatedFinder", s:finder)
 endfunction
 
