@@ -53,12 +53,10 @@ For examples, jump between `recipes/default.rb` and `attributes/default.rb`
 
 Keymap Example
 -----------------------------------------------------------------
+
     au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
     function! s:SetupChef()
-        set isk+=!,?,:
-        " default ChefEditCmd is 'edit '
-        let g:ChefEditCmd  = 'split '
-
+        let g:ChefEditCmd  = 'edit '
         nnoremap <buffer> <silent> <M-a>      :<C-u>ChefDoWhatIMean<CR>
         nnoremap <buffer> <silent> <M-f>      :<C-u>ChefDoWhatIMeanSplit<CR>
     endfunction
