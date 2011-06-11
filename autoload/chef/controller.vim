@@ -1,10 +1,15 @@
 let s:Controller  = {}
 
 function! s:Controller.main(...) "{{{1
-    let org_iskeyword = &iskeyword
-    silent set iskeyword+=:
-    let env = chef#environment#new()
-    let &iskeyword = org_iskeyword
+
+    try
+        let org_iskeyword = &iskeyword
+        silent set iskeyword+=:
+        let env = chef#environment#new()
+    finally
+        let &iskeyword = org_iskeyword
+    endtry
+
     let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
 
     " let finders = [

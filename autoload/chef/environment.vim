@@ -3,30 +3,23 @@ let s:Environment = {}
 function! s:Environment.new() "{{{1
     let org  = expand('%:p')
     let dirs = split(org, '/')
-    let types = ['recipes', 'attributes', 'templates', 'files', 'definitions']
-
-    let type_name = "NONE"
-    for type in types
-        if index(dirs, type) != -1
-            let type_name = type
-            break
-        endif
-    endfor
-
     let cookbook_root = "/" . join(dirs[0: index(dirs, 'cookbooks')], '/')
     let recipe_name   = dirs[index(dirs, 'cookbooks')+1]
     let recipe_root   = cookbook_root . "/" . recipe_name
 
+    let part = split(org[len(recipe_root):],'/')
+    let type_name = len(part) > 1 ? part[0] : "NONE"
+
     let env =  {
-                \ 'line':  getline('.'),
-                \ 'cword': expand('<cword>'),
-                \ 'cWORD': expand('<cWORD>'),
-                \ 'cfile': expand('<cfile>'),
-                \ 'basename': fnamemodify(org,":p:t"),
-                \ 'ext': expand('<cfile>'),
+                \ 'line':        getline('.'),
+                \ 'cword':       expand('<cword>'),
+                \ 'cWORD':       expand('<cWORD>'),
+                \ 'cfile':       expand('<cfile>'),
+                \ 'basename':    fnamemodify(org,":p:t"),
                 \ 'recipe_name': recipe_name,
-                \ 'type_name': type_name,
+                \ 'type_name':   type_name,
                 \ }
+    let env.ext = fnamemodify(env.cfile,":p:e")
 
     let env.path = {}
     let env.path = {

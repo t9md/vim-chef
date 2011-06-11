@@ -5,7 +5,7 @@ function s:finder.condition(e) "{{{1
 endfunction
 
 function s:finder.find(e) "{{{1
-    let type = fnamemodify(a:e.cfile, ":p:e") == 'erb' ? 'templates' : 'files'
+    let type = a:e.ext == 'erb' ? 'templates' : 'files'
     let fpath = join([a:e.path.recipe , type, 'default' , a:e.cfile ], '/')
     if filereadable(fpath)
         execute a:e.editcmd . ' ' . fpath
