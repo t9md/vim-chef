@@ -19,18 +19,14 @@ function! s:Controller.main(...) "{{{1
         if g:ChefDebug
             call self.debug(finder.id)
         endif
-        try
-            if finder.condition(env)
-                if g:ChefDebug
-                    call self.debug('condition met for ' . finder.id)
-                endif
-                call finder.find(env)
-                break
+
+        if finder.condition(env)
+            if g:ChefDebug
+                call self.debug('condition met for ' . finder.id)
             endif
-        catch /FinderComplete/
-            echo v:exception
+            call finder.find(env)
             break
-        endtry
+        endif
     endfor
 endfunction 
 
