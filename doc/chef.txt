@@ -114,5 +114,7 @@ CHANGELOG						*chef-changelog*
 
 0.5	2011-06-12
 	- First release
+0.6	2011-06-12
+	- Make more fuzzy for attribute finding.
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:
