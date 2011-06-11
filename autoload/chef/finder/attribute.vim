@@ -18,6 +18,10 @@ function s:finder.find(e) "{{{1
     let path = join([ a:e.path.cookbooks, recipe, 'attributes' ], '/')
     let candidate = split(globpath(path, "*.rb", 1),"\n")
 
+    " make current recipe's attribute dir into candidate because definition is ambiguous.
+    " ex) apache2 recip's have node[:apache][:listen_ports].
+    let candidate += split(globpath(a:e.path.attributes, "*.rb", 1),"\n")
+
 
     if g:ChefDebug
         call self.debug(candidate)
