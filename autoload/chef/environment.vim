@@ -3,15 +3,12 @@ let s:Environment = {}
 function! s:Environment.new() "{{{1
     let org  = expand('%:p')
     let dirs = split(org, '/')
-
     let types = ['recipes', 'attributes', 'templates', 'files', 'definitions']
+
     let type_name = "NONE"
-    let type_idx  = -1
     for type in types
-        let idx = index(dirs, type)
-        if idx != -1
+        if index(dirs, type) != -1
             let type_name = type
-            let type_idx = idx
             break
         endif
     endfor
@@ -29,8 +26,8 @@ function! s:Environment.new() "{{{1
                 \ 'ext': expand('<cfile>'),
                 \ 'recipe_name': recipe_name,
                 \ 'type_name': type_name,
-                \ 'type_idx': type_idx,
                 \ }
+
     let env.path = {}
     let env.path = {
                 \ 'org':         org,
@@ -42,13 +39,6 @@ function! s:Environment.new() "{{{1
                 \ 'attributes':  recipe_root."/attributes",
                 \ 'definitions': recipe_root."/definitions"
                 \ }
-
-    " let env.recipe_root     = join([env.cookbook_root , env.recipe_name ] , '/')
-    " let env.recipes_dir     = join([env.recipe_root, "recipes"        ] , '/')
-    " let env.files_dir       = join([env.recipe_root, "files"          ] , '/')
-    " let env.templates_dir   = join([env.recipe_root, "templates"      ] , '/')
-    " let env.definitions_dir = join([env.recipe_root, "definitions"    ] , '/')
-    " let env.attributes_dir  = join([env.recipe_root, "attributes"     ] , '/')
     return env
 endfunction
 
