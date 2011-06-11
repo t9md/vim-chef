@@ -7,13 +7,12 @@ Author : t9md <taqumd@gmail.com>
 CONTENTS					*chef-contents*
 
 Introduction					|chef-introduction|
-Usage						|chef-usage|
 Commands					|chef-commands|
+Usage						|chef-usage|
 Configuration					|chef-config|
 Variables					|chef-variables|
 Notes						|chef-notes|
 ToDo						|chef-todo|
-Bugs						|chef-bugs|
 Changelog					|chef-changelog|
 
 ==============================================================================
@@ -85,7 +84,7 @@ For examples, jump between `recipes/default.rb` and `attributes/default.rb`
 `<M-a>` try to open `cookbooks/nova/recipes/mysql.rb`
 
 ==============================================================================
-CONFIGURATION						*underlinetag-keymap*
+CONFIGURATION						*chef-config*
 >
     au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
     function! s:SetupChef()
