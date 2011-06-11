@@ -13,9 +13,8 @@ function s:finder.find(e) "{{{1
                     \ a:e.path[related] . "/" . "default.rb"
                     \ ]
     endif
-    if g:ChefDebug
-        call self.debug(candidate)
-    endif
+
+    call self.debug(candidate)
     for file in candidate
         if filereadable(file)
             execute a:e.editcmd . ' ' . file

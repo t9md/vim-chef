@@ -2,9 +2,7 @@ let s:finder = {}
 
 function s:finder.condition(e)  "{{{1
     let a:e.attr = s:extract_attribute(a:e.cWORD)
-    if g:ChefDebug
-        call self.debug('extracted attr is ' . a:e.attr)
-    endif
+    call self.debug('extracted attr is ' . a:e.attr)
     return !empty(a:e.attr)
 endfunction
 
@@ -33,19 +31,13 @@ function s:finder.find(e) "{{{1
     " ex) apache2 recip's have node[:apache][:listen_ports].
     let candidate += split(globpath(a:e.path.attributes, "*.rb", 1),"\n")
 
-
-    if g:ChefDebug
-        call self.debug(candidate)
-    endif
-
+    call self.debug(candidate)
 
     let found_attribute = 0
     try "{{{
         for pattern in s:search_patterns_for(a:e.attr)
             for file in candidate
-                if g:ChefDebug
-                    call self.debug('search ' . pattern . ' in file ' . file )
-                endif
+                call self.debug('search ' . pattern . ' in file ' . file )
 
                 if match(readfile(file), pattern) != -1
                     exe 'silent ' . a:e.editcmd . ' ' . file

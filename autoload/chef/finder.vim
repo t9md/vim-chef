@@ -12,6 +12,9 @@ function! s:finderBase.condition(e) "{{{1
 endfunction
 
 function! s:finderBase.debug(msg) "{{{1
+    if !g:ChefDebug
+        return
+    endif
     echo "[". self.id ."] " . string(a:msg)
 endfunction
 
