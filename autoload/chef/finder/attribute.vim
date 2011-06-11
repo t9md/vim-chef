@@ -16,7 +16,18 @@ function s:finder.find(e) "{{{1
     let  recipe = s:clean_attr(attr_list[0])
 
     let path = join([ a:e.path.cookbooks, recipe, 'attributes' ], '/')
-    let candidate = split(globpath(path, "*.rb", 1),"\n")
+
+    let candidate = []
+
+    " [TODO] I'm not sure following if clause do good for accuracy.
+    " but intending same attribute is defined in several files, in that
+    " situation, more prioritize siginificant filename(not default.rb).
+    if a:e.type_name == 'recipes' && a:e.basename != 'default.rb'
+       call add(candidate, join([ a:e.path.attributes, a:e.basename ], '/'))
+    endif
+
+    let path = join([ a:e.path.cookbooks, recipe, 'attributes' ], '/')
+    let candidate += split(globpath(path, "*.rb", 1),"\n")
 
     " make current recipe's attribute dir into candidate because definition is ambiguous.
     " ex) apache2 recip's have node[:apache][:listen_ports].
