@@ -65,5 +65,5 @@ Keymap Example
 
 TODO
 -----------------------------------------------------------------
-* Refactor.  Eliminate global scope variable. DRY.
-* make each function return path then handle editing method 'split', 'edit' in controller.
+* more accurate attribute finding
+* don't open files when attribute finding fail.
