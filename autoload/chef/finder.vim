@@ -7,13 +7,6 @@ function! s:finderBase.new(id, finder)
     return o
 endfunction
 
-function! s:finderBase.call(e)
-    if ! self.condition(a:e)
-        return
-    endif
-    return self.find(a:e)
-endfunction
-
 function! s:finderBase.condition(e)
     return 1
 endfunction

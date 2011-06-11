@@ -13,7 +13,10 @@ function! s:Controller.main(...)
 
     for finder in finders
         try
-            let fpath =  finder.call(env)
+            if !finder.condition(env)
+                continue
+            endif
+            let fpath = finder.find(env)
             if !empty(fpath)
                 if g:ChefDebug
                     echo finder.id
