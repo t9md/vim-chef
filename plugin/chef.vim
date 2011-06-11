@@ -26,10 +26,8 @@ endif
 
 " Environment: {{{1
 "=================================================================
-let e = s:Environment
-function! e.new() "{{{2
+function! s:Environment.new() "{{{2
     let path = expand('%:p')
-    " let path = '/home/maeda_taku/dev/chef/openstack-cookbooks/cookbooks/nova/recipes/default.rb'
     let dirs = split(path, '/')
     let types = ['recipes', 'attributes', 'templates', 'files']
     let type_name = "NONE"
@@ -60,9 +58,7 @@ endfunction
 
 " Controller: {{{1
 "=================================================================
-let c = s:Controller
-
-function! c.main(...) "{{{2
+function! s:Controller.main(...) "{{{2
     " let self.env = s:Environment.new()
     let env = s:Environment.new()
     let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
@@ -100,7 +96,7 @@ function! s:extract_attribute(str) "{{{2
     endtry
 endfunction
 
-function! c.findAttributes(e) "{{{2
+function! s:Controller.findAttributes(e) "{{{2
     let attr = s:extract_attribute(a:e.cWORD)
     if empty(attr)
         return
@@ -134,7 +130,7 @@ function! c.findAttributes(e) "{{{2
     endif
 endfunction
 
-function! c.findSource(e) "{{{2
+function! s:Controller.findSource(e) "{{{2
     if !(a:e.line =~# '\<source\>' && a:e.cword !=# 'source')
         return ""
     endif
@@ -143,7 +139,7 @@ function! c.findSource(e) "{{{2
     if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
 
-function! c.findRecipe(e) "{{{2
+function! s:Controller.findRecipe(e) "{{{2
     if !(a:e.line =~# '\<include_recipe\>' && a:e.cword !=# 'include_recipe')
         return ""
     endif
@@ -153,7 +149,7 @@ function! c.findRecipe(e) "{{{2
     if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
 
-function! c.findRelated(e) "{{{2
+function! s:Controller.findRelated(e) "{{{2
     let dirs = split(a:e.path, '/')
     let type_name = a:e.type_name
     let type_idx  = a:e.type_idx
@@ -162,16 +158,9 @@ function! c.findRelated(e) "{{{2
         let dirs[type_idx] = "attributes"
     elseif type_name == 'attributes'
         let dirs[type_idx] = "recipes"
-        " elseif type_name == 'templates' || type_name == 'files'
     else
         return ""
     endif
-    " elseif type_name =~# '^templates$\|^files$'
-        " let dirs[type_idx] = "recipes"
-        " call remove(dirs, -1)
-        " let dirs[-1] = dirs[-1] . '.rb'
-    " endif
-
     let fpath = '/' . join(dirs, '/')
     if filereadable(fpath) | return fpath | else | return "" | endif
 endfunction
