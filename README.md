@@ -66,4 +66,3 @@ Keymap Example
 TODO
 -----------------------------------------------------------------
 * more accurate attribute finding
-* don't open files when attribute finding fail.

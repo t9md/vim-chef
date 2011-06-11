@@ -1,9 +1,13 @@
 let s:Controller  = {}
 
-function! s:Controller.main(...)
+function! s:Controller.main(...) "{{{1
     let env = chef#environment#new()
     let env.editcmd = a:0 ? a:1 : g:ChefEditCmd
 
+    " let finders = [
+                " \ chef#finder#attribute#new(),
+                " \ chef#finder#related#new(),
+                " \ ]
     let finders = [
                 \ chef#finder#attribute#new(),
                 \ chef#finder#source#new(),
@@ -13,10 +17,13 @@ function! s:Controller.main(...)
 
     for finder in finders
         if g:ChefDebug
-            echo finder.id
+            call self.debug(finder.id)
         endif
         try
             if finder.condition(env)
+                if g:ChefDebug
+                    call self.debug('condition met for ' . finder.id)
+                endif
                 call finder.find(env)
                 break
             endif
@@ -27,6 +34,11 @@ function! s:Controller.main(...)
     endfor
 endfunction 
 
-function! chef#controller#main(...)
+function! s:Controller.debug(msg) "{{{1
+    echo "[Controller] " . string(a:msg)
+endfunction
+
+function! chef#controller#main(...) "{{{1
     call call(s:Controller.main, a:000, s:Controller)
 endfunction
+" vim: set sw=4 sts=4 et fdm=marker:
