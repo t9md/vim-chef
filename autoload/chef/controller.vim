@@ -3,7 +3,7 @@ let s:Controller  = {}
 function! s:Controller.main(...) "{{{1
     try
         let org_iskeyword = &iskeyword
-        silent set iskeyword+=:
+        silent set iskeyword+=:,-
         let env = chef#environment#new()
     finally
         let &iskeyword = org_iskeyword
