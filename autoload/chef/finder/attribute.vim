@@ -7,36 +7,10 @@ function s:finder.condition(e)  "{{{1
 endfunction
 
 function s:finder.find(e) "{{{1
-    let attr_list = s:scan(a:e.attr, '\[\(.\{-}\)\]\+')
-    if len(attr_list) < 2
-        return
-    endif 
-    let  recipe = s:clean_attr(attr_list[0])
-
-    let path = join([ a:e.path.cookbooks, recipe, 'attributes' ], '/')
-
-    let candidate = []
-
-    " [TODO] I'm not sure following if clause do good for accuracy.
-    " but intending same attribute is defined in several files, in that
-    " situation, more prioritize siginificant filename(not default.rb).
-    if a:e.type_name == 'recipes' && a:e.basename != 'default.rb'
-       call add(candidate, join([ a:e.path.attributes, a:e.basename ], '/'))
-    endif
-
-    let path = join([ a:e.path.cookbooks, recipe, 'attributes' ], '/')
-    let candidate += split(globpath(path, "*.rb", 1),"\n")
-
-    " make current recipe's attribute dir into candidate because definition is ambiguous.
-    " ex) apache2 recip's have node[:apache][:listen_ports].
-    let candidate += split(globpath(a:e.path.attributes, "*.rb", 1),"\n")
-
-    call self.debug(candidate)
-
     let found_attribute = 0
     try "{{{
         for pattern in s:search_patterns_for(a:e.attr)
-            for file in candidate
+            for file in self.candidate(a:e)
                 call self.debug('search ' . pattern . ' in file ' . file )
 
                 if match(readfile(file), pattern) != -1
@@ -58,7 +32,38 @@ function s:finder.find(e) "{{{1
     endif
 endfunction
 
-function! s:scan(str, pattern)
+function! s:finder.candidate(e) "{{{1
+    let attr_list = s:scan(a:e.attr, '\[\(.\{-}\)\]\+')
+    if len(attr_list) < 2
+        return []
+    endif 
+    let candidate = []
+    let recipe_name = s:clean_attr(attr_list[0])
+
+    let attributes_dir = join([ a:e.path.cookbooks, recipe_name, 'attributes' ], '/')
+
+    if isdirectory( attributes_dir )
+        let candidate += split(globpath(attributes_dir, "*.rb", 1),"\n")
+    else
+        let candidate += split(globpath(a:e.path.attributes, "*.rb", 1),"\n")
+    endif
+
+    call self.debug("pre-prioritize: " . string(candidate))
+    if attributes_dir == a:e.path.attributes
+        " If there is attribute file which have same file name as current
+        " recipe, it should be more likely contain target attribute.
+        let f   = join([ a:e.path.attributes, a:e.basename ], '/')
+        let idx = index(candidate, f)
+        if idx != -1
+            let f = remove(candidate, idx)
+            call insert(candidate, f)
+        endif
+    endif
+    call self.debug("post-prioritize: " . string(candidate))
+    return candidate
+endfunction
+
+function! s:scan(str, pattern) "{{{1
     let ret = []
     let pattern = a:pattern
     let nth = 1
