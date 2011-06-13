@@ -108,7 +108,6 @@ Configuration Example
     " remove 'Related' from default, I want to find 'Related' explicitly.
     let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
 
-
     function! s:SetupChef()
         " Mouse:
         " Left mouse click to GO!
