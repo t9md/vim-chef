@@ -65,6 +65,30 @@ Keymap Example
         nnoremap <buffer> <silent> <C-w><C-f>    :<C-u>ChefDoWhatIMeanSplit<CR>
     endfunction
 
+Hook after finding success [experimental]
+-----------------------------------------------------------------
+After each finder success finding(return 1)
+hook function is called if hook is defined.
+hook take one argument 'env'.
+following is hook example, which reveal found file in NERDTree.
+
+    function! ChefNerdTreeFind(env)
+        try
+            :NERDTreeFind
+            let scrolloff_orig = &scrolloff
+            let &scrolloff = 15
+            normal! jk
+            wincmd p
+        finally
+            let &scrolloff = scrolloff_orig
+        endtry
+    endfunction
+
+    let g:chef = {
+          \ 'hooks': ['ChefNerdTreeFind']
+          \ }
+
 TODO
 -----------------------------------------------------------------
-* more accurate attribute finding
+* Cache definition entries.
+* It is not necessary to instantiate each finder every calling, so env should be passed to each finder's function every call.
