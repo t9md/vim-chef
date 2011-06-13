@@ -1,7 +1,7 @@
 "=============================================================================
 " File: chef.vim
 " Author: t9md <taqumd@gmail.com>
-" Version: 0.06
+" Version: 0.7
 " WebPage: https://github.com/t9md/vim-chef
 " License: BSD
 
