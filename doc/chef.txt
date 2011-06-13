@@ -1,6 +1,6 @@
 *chef.txt*	plugin for opscode's chef. find attribute, open recipes etc.
 
-Version: 0.7
+Version: 0.8
 Author : t9md <taqumd@gmail.com>
 
 ==============================================================================
