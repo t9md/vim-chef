@@ -40,10 +40,14 @@ For examples, jump between `recipes/default.rb` and `attributes/default.rb`
     node[:apache2][:address] = node[:nova][:my_ip]
     ^^^^^^^^^^^^^^^^^^^^^^^
 
-`<M-a>` try to open in following order
+`<M-a>` try to find that attribute appropriate order.
 
-1. apache2/attribute/address.rb
-2. apache2/attribute/default.rb
+## jump to definition
+
+    apache_module "authz_groupfile"
+    ^^^^^^^^^^^^^
+
+apache_module is definition. so `<M-a>` would find and jump to position where defined.
 
 Limitation
 -----------------------------------------------------------------
