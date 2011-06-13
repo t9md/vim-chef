@@ -84,12 +84,29 @@ Hook after finding success [experimental]
 -----------------------------------------------------------------
 After each finder success finding(return 1)
 Hook function is called if hook is defined.
-Hook take one argument 'env'.
+Hook take one argument `env`.
 See "Configuration Example".
 
 Configuration Example
 -----------------------------------------------------------------
 
+### Requirement
+    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
+
+### Basic
+    function! s:SetupChef()
+        " Mouse:
+        " Left mouse click to GO!
+        nnoremap <buffer> <silent> <2-LeftMouse> :<C-u>ChefFindAny<CR>
+        " Right mouse click to Back!
+        nnoremap <buffer> <silent> <RightMouse> <C-o>
+
+        " Keyboard:
+        nnoremap <buffer> <silent> <M-a>      :<C-u>ChefFindAny<CR>
+        nnoremap <buffer> <silent> <M-f>      :<C-u>ChefFindAnySplit<CR>
+    endfunction
+
+### Advanced
     function! ChefNerdTreeFind(env)
         try
             :NERDTreeFind
@@ -120,7 +137,6 @@ Configuration Example
         nnoremap <buffer> <silent> <M-f>      :<C-u>ChefFindAnySplit<CR>
         nnoremap <buffer> <silent> <M-r>      :<C-u>ChefFindRelated<CR>
     endfunction
-    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
 
 TODO
 -----------------------------------------------------------------
