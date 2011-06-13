@@ -20,20 +20,17 @@ endfunction
 function! s:finderBase.path_hl(fpath) "{{{1
     let path_str = a:fpath[len(self.env.path.cookbooks) + 1 : ]
     let [ recipe, type; rest ] = split(path_str, '/')
-    let type_color = s:type_color_of(type)
+    let type_color = get(s:color_table, type, 'Special')
     let msgs = [[ recipe, "Directory" ], [ type, type_color ], [join(rest,'/'), 'Normal']]
     call self.msghl(msgs, '/')
 endfunction
 
-function! s:type_color_of(type)
-    let tbl = {
-                \ 'recipes': "Identifier",
-                \ 'attributes': "vimCommand",
-                \ 'templates': "PreProc",
-                \ 'files': "PreProc"
-                \ }
-    return get(tbl, a:type, 'Special')
-endfunction
+let s:color_table = {
+            \ 'recipes':    "Identifier",
+            \ 'attributes': "vimCommand",
+            \ 'templates':  "PreProc",
+            \ 'files':      "PreProc"
+            \ }
 
 function! s:finderBase.msghl(msgs, sep) "{{{1
     echohl Function

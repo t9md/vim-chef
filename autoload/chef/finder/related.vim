@@ -1,12 +1,12 @@
 let s:finder = {}
 
+let s:relation  = {
+            \ 'recipes': "attributes",
+            \ 'attributes': "recipes",
+            \ }
 function s:finder.find() "{{{1
     let candidate = []
-    let relation  = {
-                \ 'recipes': "attributes",
-                \ 'attributes': "recipes",
-                \ }
-    let related =  get(relation, self.env.type_name,"")
+    let related =  get(s:relation, self.env.type_name,"")
     if !empty(related)
         let candidate = [
                     \ self.env.path[related] . "/" . self.env.basename,

@@ -101,7 +101,8 @@ function! s:finder.attr_patterns() "{{{1
 endfunction
 
 function! s:extract_attribute(str) "{{{1
-    let m =  matchlist(a:str, '\(node\[.*\]\)')
+    " let m =  matchlist(a:str, '\(node\[.*\]\)')
+    let m =  matchlist(a:str, '\(node\[[^}]*\]\)')
     if !empty(m)
         return m[1]
     else
