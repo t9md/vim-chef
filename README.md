@@ -25,8 +25,8 @@ in following examples, assume
 `<M-a>` try to open file under `files/default/grants.sql`
 
 ## jump between attributes and recipes
-in buffer for file under `recipes/*` or `attributes/*`
-Press `<M-a>` to jump *alternate* files.
+In buffer for file under `recipes/*` or `attributes/*`
+Press `<M-a>` to jump *related* files.
 For examples, jump between `recipes/default.rb` and `attributes/default.rb`
 
 ## open recipe files
