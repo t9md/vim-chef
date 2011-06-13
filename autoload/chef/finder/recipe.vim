@@ -21,7 +21,7 @@ endfunction
 
 
 function! chef#finder#recipe#new()  "{{{1
-    return  chef#finder#new("Recipe", s:finder)
+    return chef#finder#new(s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
 

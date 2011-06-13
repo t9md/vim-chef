@@ -48,9 +48,15 @@ endfunction
 
 function! s:finder_for(name)
     if !has_key(s:finders, a:name) || g:ChefDebugEveryInit
-        let s:finders[a:name] = chef#finder#{tolower(a:name)}#new()
+        let s:finders[a:name] = s:create_finder(a:name)
     endif
     return s:finders[a:name]
+endfunction
+
+function! s:create_finder(name)
+    let finder = chef#finder#{tolower(a:name)}#new()
+    let finder.id = a:name
+    return finder
 endfunction
 
 function! chef#controller#findAny(...) "{{{1

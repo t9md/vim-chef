@@ -49,6 +49,6 @@ function! s:finder.definition_table()
 endfunction
 
 function! chef#finder#definition#new()  "{{{1
-    return chef#finder#new("Definition", s:finder)
+    return chef#finder#new(s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:

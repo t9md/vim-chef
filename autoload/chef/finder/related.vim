@@ -38,7 +38,7 @@ function s:finder.find() "{{{1
 endfunction
 
 function! chef#finder#related#new() "{{{1
-    return chef#finder#new("Related", s:finder)
+    return chef#finder#new(s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
 
