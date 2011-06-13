@@ -24,6 +24,11 @@ if ! exists('g:ChefDebug')
   let g:ChefDebug = 0
 endif
 
+if !exists('g:chef')
+    let g:chef= {}
+    let g:chef.hooks = []
+endif
+
 " Command: {{{1
 "=================================================================
 command! ChefDoWhatIMean       :call chef#controller#main()

@@ -1,14 +1,65 @@
 let s:finderBase = {}
 
-function! s:finderBase.new(id, finder) "{{{1
-    let o = a:finder
+function! s:finderBase.new(id, finder, env) "{{{1
+    let o = deepcopy(self)
     let o.id = a:id
-    call extend(o, deepcopy(self), 'keep')
+    let o.env = a:env
+    call extend(o, a:finder, 'force')
     return o
 endfunction
 
-function! s:finderBase.condition(e) "{{{1
+function! s:finderBase.condition() "{{{1
     return 1
+endfunction
+
+function! s:finderBase.edit(fpath) "{{{1
+    silent execute self.env.editcmd . ' ' . a:fpath
+    call self.path_hl(a:fpath)
+endfunction
+
+function! s:finderBase.path_hl(fpath) "{{{1
+    let path_str = a:fpath[len(self.env.path.cookbooks) + 1 : ]
+    let [ recipe, type; rest ] = split(path_str, '/')
+    let type_color = s:type_color_of(type)
+    let msgs = [[ recipe, "Directory" ], [ type, type_color ], [join(rest,'/'), 'Normal']]
+    call self.msghl(msgs, '/')
+endfunction
+
+function! s:type_color_of(type)
+    let tbl = {
+                \ 'recipes': "Identifier",
+                \ 'attributes': "vimCommand",
+                \ 'templates': "PreProc",
+                \ 'files': "PreProc"
+                \ }
+    return get(tbl, a:type, 'Special')
+endfunction
+
+function! s:finderBase.msghl(msgs, sep) "{{{1
+    echohl Function
+    echo "[". self.id ."] "
+    let last = len(a:msgs) - 1
+    for idx in range(len(a:msgs))
+        let [msg, hl] = a:msgs[idx]
+        silent execute 'echohl ' . hl
+        echon msg
+        echohl Normal
+        if ! (idx == last)
+            echon a:sep
+        endif
+    endfor
+    echohl Normal
+endfunction
+
+function! s:finderBase.msg(msg) "{{{1
+    try
+        echohl Function
+        echo "[". self.id ."] "
+        echohl Normal
+        echon a:msg
+    finally
+        echohl Normal
+    endtry
 endfunction
 
 function! s:finderBase.debug(msg) "{{{1
@@ -18,8 +69,9 @@ function! s:finderBase.debug(msg) "{{{1
     echo "[". self.id ."] " . string(a:msg)
 endfunction
 
-
-function! chef#finder#new(id, finder) "{{{1
-    return s:finderBase.new(a:id, a:finder)
+function! chef#finder#new(id, finder, env) "{{{1
+    let finder = s:finderBase.new(a:id, a:finder, a:env)
+    call finder.debug("initialized")
+    return finder
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
