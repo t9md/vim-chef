@@ -19,10 +19,7 @@ function s:finder.find() "{{{1
     endif
 endfunction
 
-function! chef#finder#source#new(env) "{{{1
-    " if !exists('s:instance')
-    let s:instance = chef#finder#new("SourceFinder", s:finder, a:env)
-    " endif
-    return s:instance
+function! chef#finder#source#new() "{{{1
+    return chef#finder#new("Source", s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:

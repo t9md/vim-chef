@@ -110,8 +110,7 @@ function! s:extract_attribute(str) "{{{1
     endif
 endfunction
 
-function! chef#finder#attribute#new(env) "{{{1
-    let s:instance = chef#finder#new("AttributeFinder", s:finder, a:env)
-    return s:instance
+function! chef#finder#attribute#new() "{{{1
+    return chef#finder#new("Attribute", s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:

@@ -37,11 +37,8 @@ function s:finder.find() "{{{1
     endif
 endfunction
 
-function! chef#finder#related#new(env) "{{{1
-    " if !exists('s:instance')
-    let s:instance = chef#finder#new("RelatedFinder", s:finder, a:env)
-    " endif
-    return s:instance
+function! chef#finder#related#new() "{{{1
+    return chef#finder#new("Related", s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
 

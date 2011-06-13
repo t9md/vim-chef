@@ -1,11 +1,14 @@
 let s:finderBase = {}
 
-function! s:finderBase.new(id, finder, env) "{{{1
+function! s:finderBase.new(id, finder) "{{{1
     let o = deepcopy(self)
     let o.id = a:id
-    let o.env = a:env
     call extend(o, a:finder, 'force')
     return o
+endfunction
+
+function! s:finderBase.init(env) "{{{1
+    let self.env = a:env
 endfunction
 
 function! s:finderBase.condition() "{{{1
@@ -66,8 +69,8 @@ function! s:finderBase.debug(msg) "{{{1
     echo "[". self.id ."] " . string(a:msg)
 endfunction
 
-function! chef#finder#new(id, finder, env) "{{{1
-    let finder = s:finderBase.new(a:id, a:finder, a:env)
+function! chef#finder#new(id, finder) "{{{1
+    let finder = s:finderBase.new(a:id, a:finder)
     call finder.debug("initialized")
     return finder
 endfunction

@@ -5,13 +5,14 @@ chef.vim is plugin which make it easy for
   * jump between `attributes` and `recipes`
   * open `recipes` by extract filename from `include_recipe`
   * open `templates` and `files`
-  * jump to `attributes` file
+  * jump to `attributes`
+  * jump to `definition`
 
 HOW to Use
 -----------------------------------------------------------------
 in following examples, assume
 
-* `<M-a>` is mapped to `call g:ChefDoWhatIMean()<CR>`
+* `<M-a>` is mapped to `call g:ChefFindAny()<CR>`
 * `^` indicate cursor position
 
 ## open template or file in current recipe
@@ -54,27 +55,40 @@ Limitation
 chef.vim assume cookbooks is reside under the directory name of 'cookbooks',  
 so cookboooks in either 'my_cookbooks' nor 'cookbooks_sample' work.
 
-
-Keymap Example
+Commands
 -----------------------------------------------------------------
 
-    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
-    function! s:SetupChef()
-        " Left mouse click to GO!
-        nnoremap <buffer> <silent> <2-LeftMouse> :<C-u>ChefDoWhatIMean<CR>
-        " Right mouse click to Back!
-        nnoremap <buffer> <silent> <RightMouse> <C-o>
+  * ChefFindAny (oldname: ChefDoWhatIMean)
+  * ChefFindAttribute
+  * ChefFindRecipe
+  * ChefFindDefinition
+  * ChefFindSource
+  * ChefFindRelated
 
-        nnoremap <buffer> <silent> <M-a>         :<C-u>ChefDoWhatIMean<CR>
-        nnoremap <buffer> <silent> <C-w><C-f>    :<C-u>ChefDoWhatIMeanSplit<CR>
-    endfunction
+Customize Finding target and finding order
+-----------------------------------------------------------------
+You can customize what you want to find in `ChefFindAny` command.
+Following are default finder list.
+`ChefFindAny` try to find target in this order.
+
+    [ "Attribute", "Source", "Recipe", "Definition", "Related" ]
+
+If you want to exclude `Related` finder from target, set following in your `.vimrc`
+
+    let g:chef = {}
+    let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
+
+It's OK to remove Finder from list, but I don't recommend changing *order*.
 
 Hook after finding success [experimental]
 -----------------------------------------------------------------
 After each finder success finding(return 1)
-hook function is called if hook is defined.
-hook take one argument 'env'.
-following is hook example, which reveal found file in NERDTree.
+Hook function is called if hook is defined.
+Hook take one argument 'env'.
+See "Configuration Example".
+
+Configuration Example
+-----------------------------------------------------------------
 
     function! ChefNerdTreeFind(env)
         try
@@ -88,11 +102,27 @@ following is hook example, which reveal found file in NERDTree.
         endtry
     endfunction
 
-    let g:chef = {
-          \ 'hooks': ['ChefNerdTreeFind']
-          \ }
+    let g:chef = {}
+    let g:chef.hooks = ['ChefNerdTreeFind']
+
+    " remove 'Related' from default, I want to find 'Related' explicitly.
+    let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
+
+
+    function! s:SetupChef()
+        " Mouse:
+        " Left mouse click to GO!
+        nnoremap <buffer> <silent> <2-LeftMouse> :<C-u>ChefFindAny<CR>
+        " Right mouse click to Back!
+        nnoremap <buffer> <silent> <RightMouse> <C-o>
+
+        " Keyboard:
+        nnoremap <buffer> <silent> <M-a>      :<C-u>ChefFindAny<CR>
+        nnoremap <buffer> <silent> <M-f>      :<C-u>ChefFindAnySplit<CR>
+        nnoremap <buffer> <silent> <M-r>      :<C-u>ChefFindRelated<CR>
+    endfunction
+    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
 
 TODO
 -----------------------------------------------------------------
 * Cache definition entries.
-* It is not necessary to instantiate each finder every calling, so env should be passed to each finder's function every call.

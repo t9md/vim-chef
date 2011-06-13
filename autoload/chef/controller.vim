@@ -1,3 +1,4 @@
+let s:finders = {}
 let s:Controller  = {}
 
 function! s:Controller.main(...) "{{{1
@@ -12,8 +13,10 @@ function! s:Controller.main(...) "{{{1
 
     let env.editcmd = a:0 ? a:1 : "edit"
 
-    for finder in self.finders(env)
+    for finder in self.finders
         call self.debug(finder.id)
+
+        call finder.init(env)
         if finder.condition()
             call self.debug('condition met for ' . finder.id)
             let success = finder.find()
@@ -34,16 +37,6 @@ function! s:Controller.main(...) "{{{1
     endif
 endfunction 
 
-function! s:Controller.finders(env) "{{{1
-    let val =  [ 
-                \ chef#finder#attribute#new(a:env),
-                \ chef#finder#source#new(a:env),
-                \ chef#finder#recipe#new(a:env),
-                \ chef#finder#definition#new(a:env),
-                \ chef#finder#related#new(a:env),
-                \ ]
-    return val
-endfunction
 
 function! s:Controller.debug(msg) "{{{1
     if !g:ChefDebug
@@ -52,7 +45,42 @@ function! s:Controller.debug(msg) "{{{1
     echo "[Controller] " . string(a:msg)
 endfunction
 
-function! chef#controller#main(...) "{{{1
+
+function! s:finder_for(name)
+    if !has_key(s:finders, a:name) || g:ChefDebugEveryInit
+        let s:finders[a:name] = chef#finder#{tolower(a:name)}#new()
+    endif
+    return s:finders[a:name]
+endfunction
+
+function! chef#controller#findAny(...) "{{{1
+    let s:Controller.finders = map(copy(g:chef.any_finders), "s:finder_for(v:val)")
     call call(s:Controller.main, a:000, s:Controller)
 endfunction
+
+function! chef#controller#findAttribute(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("Attribute") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
+function! chef#controller#findSource(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("Source") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
+function! chef#controller#findRecipe(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("Recipe") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
+function! chef#controller#findDefinition(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("Definition") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
+function! chef#controller#findRelated(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("Related") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
 " vim: set sw=4 sts=4 et fdm=marker:

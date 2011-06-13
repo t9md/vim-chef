@@ -20,11 +20,8 @@ function s:finder.find() "{{{1
 endfunction
 
 
-function! chef#finder#recipe#new(env)  "{{{1
-    " if !exists('s:instance') || g:ChefDebug == 1
-    let s:instance = chef#finder#new("RecipeFinder", s:finder, a:env)
-    " endif
-    return s:instance
+function! chef#finder#recipe#new()  "{{{1
+    return  chef#finder#new("Recipe", s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
 

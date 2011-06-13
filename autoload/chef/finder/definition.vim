@@ -48,12 +48,7 @@ function! s:finder.definition_table()
     return self._table
 endfunction
 
-function! chef#finder#definition#new(env)  "{{{1
-    " if g:ChefDebug == 1
-        " let s:instance = chef#finder#new("DefinitionFinder", s:finder, a:env)
-        " return s:instance
-    " endif
-    let s:instance = chef#finder#new("DefinitionFinder", s:finder, a:env)
-    return s:instance
+function! chef#finder#definition#new()  "{{{1
+    return chef#finder#new("Definition", s:finder)
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
