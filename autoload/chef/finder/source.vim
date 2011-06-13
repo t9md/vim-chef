@@ -1,7 +1,7 @@
 let s:finder = {}
 
 function s:finder.condition() "{{{1
-    return (self.env.line =~# '\s\+source\s\+' && self.env.cword !=# 'source')
+    return (self.env.line =~# '\s\+source\>' && self.env.cword !=# 'source')
 endfunction
 
 function s:finder.find() "{{{1
