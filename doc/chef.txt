@@ -1,9 +1,16 @@
 *chef.txt*	plugin for opscode's chef. find attribute, open recipes etc.
 
+                   ______   __               ____
+                  / ____/  / /_     ___     / __/
+                 / /      / __ `   / _ `   / /_
+                / /___   / / / /  /  __/  / __/
+                `____/  /_/ /_/   `___/  /_/
+                          - easy jump to target!!
+
 Version: 0.8
 Author : t9md <taqumd@gmail.com>
-
 ==============================================================================
+
 CONTENTS					*chef-contents*
 
 Introduction					|chef-introduction|
@@ -29,6 +36,7 @@ chef.vim is plugin which make it easy for
 
 Latest Version:
 https://github.com/t9md/vim-chef
+
 
 ==============================================================================
 COMMANDS						*chef-commands*
