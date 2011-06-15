@@ -1,7 +1,13 @@
 let s:finder = {}
 
 function s:finder.condition() "{{{1
-    return (self.env.line =~# '\<include_recipe\>' && self.env.cword !=# 'include_recipe')
+    let val1 = (self.env.line =~# '\<include_recipe\>' && self.env.cword !=# 'include_recipe')
+    if  val1 | return 1 | endif
+
+    let val2 = (self.env.basename == 'metadata.rb'
+                \ && self.env.line =~# '^recipe\s\+'
+                \ && self.env.cword !=# 'recipe' )
+    if  val2 | return 1 | endif
 endfunction
 
 function s:finder.find() "{{{1
