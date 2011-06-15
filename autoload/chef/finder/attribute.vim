@@ -46,7 +46,7 @@ function! s:finder.candidate() "{{{1
 
     let candidate = split(globpath(self.env.path.cookbooks, '*/attributes/*.rb', 1),"\n")
 
-    call self.debug("pre-prioritize: " . string(candidate))
+    " call self.debug("pre-prioritize: " . string(candidate))
     if attributes_dir == self.env.path.attributes
         " If there is attribute file which have same file name as current
         " recipe, it should be more likely contain target attribute.
@@ -57,7 +57,7 @@ function! s:finder.candidate() "{{{1
             call insert(candidate, f)
         endif
     endif
-    call self.debug("post-prioritize: " . string(candidate))
+    " call self.debug("post-prioritize: " . string(candidate))
     return candidate
 endfunction
 
@@ -76,6 +76,17 @@ function! s:scan(str, pattern) "{{{1
     return ret
 endfunction
 
+function! s:attr_quote(attr)
+    let tmp = substitute(a:attr, ":", '','g')
+    let tmp = substitute(tmp, "[", "['",'g')
+    return substitute(tmp, "]", "']",'g')
+endfunction
+
+function! s:attr_symbolize(attr)
+    let tmp = substitute(a:attr, "'", '','g')
+    return substitute(tmp, "[", '[:','g')
+endfunction
+
 function! s:clean_attr(str) "{{{1
   return substitute(a:str,'[:"'']','','g')
 endfunction
@@ -84,12 +95,17 @@ function! s:finder.attr_patterns() "{{{1
     let attr = matchlist(self.env.attr, '[.*\]')[0]
     let idx = len(attr)
     let candidate = []
+    let s:attr_translator = (match(attr, ':') != -1)
+                \ ? function("s:attr_quote")
+                \ : function("s:attr_symbolize")
     while 1
         let idx = strridx(attr, ']', idx-1)
         if idx == -1| break | endif
-        call add(candidate, escape(attr[ : idx ], ']') )
+        let org = attr[ : idx ]
+        call add(candidate, org)
+        call add(candidate, call(s:attr_translator,[org]))
     endwhile
-    return candidate
+    return map(candidate, "escape(v:val, '[]')")
 endfunction
 
 function! s:extract_attribute(str) "{{{1
