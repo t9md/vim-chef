@@ -39,9 +39,7 @@ endfunction
 
 
 function! s:Controller.debug(msg) "{{{1
-    if !g:ChefDebug
-        return
-    endif
+    if !g:ChefDebug | return | endif
     echo "[Controller] " . string(a:msg)
 endfunction
 
@@ -56,6 +54,7 @@ endfunction
 function! s:create_finder(name)
     let finder = chef#finder#{tolower(a:name)}#new()
     let finder.id = a:name
+    call finder.debug("initialized")
     return finder
 endfunction
 

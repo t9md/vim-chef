@@ -40,16 +40,11 @@ function! s:finder.candidate() "{{{1
     if len(attr_list) < 2
         return []
     endif 
-    let candidate = []
     let recipe_name = s:clean_attr(attr_list[0])
 
     let attributes_dir = join([ self.env.path.cookbooks, recipe_name, 'attributes' ], '/')
 
-    if isdirectory( attributes_dir )
-        let candidate += split(globpath(attributes_dir, "*.rb", 1),"\n")
-    else
-        let candidate += split(globpath(self.env.path.attributes, "*.rb", 1),"\n")
-    endif
+    let candidate = split(globpath(self.env.path.cookbooks, '*/attributes/*.rb', 1),"\n")
 
     call self.debug("pre-prioritize: " . string(candidate))
     if attributes_dir == self.env.path.attributes
@@ -86,16 +81,13 @@ function! s:clean_attr(str) "{{{1
 endfunction
 
 function! s:finder.attr_patterns() "{{{1
-    let attr = self.env.attr
-    let idx = 0
+    let attr = matchlist(self.env.attr, '[.*\]')[0]
+    let idx = len(attr)
     let candidate = []
     while 1
-        let idx += 1
-        let idx = stridx(attr,'[',idx+1)
-        if idx == -1
-            break
-        endif
-        call add(candidate, escape(attr[idx : ], '[]') )
+        let idx = strridx(attr, ']', idx-1)
+        if idx == -1| break | endif
+        call add(candidate, escape(attr[ : idx ], ']') )
     endwhile
     return candidate
 endfunction

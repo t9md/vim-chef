@@ -70,7 +70,6 @@ endfunction
 
 function! chef#finder#new(finder) "{{{1
     let finder = s:finderBase.new(a:finder)
-    call finder.debug("initialized")
     return finder
 endfunction
 " vim: set sw=4 sts=4 et fdm=marker:
