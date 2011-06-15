@@ -7,7 +7,7 @@
                 `____/  /_/ /_/   `___/  /_/
                           - easy jump to target!!
 
-Version: 0.8
+Version: 0.9
 Author : t9md <taqumd@gmail.com>
 ==============================================================================
 
@@ -242,18 +242,22 @@ TODO							*chef-todo*
 ==============================================================================
 CHANGELOG						*chef-changelog*
 
-0.8	2011-06-14
+2011-06-15: v0.9
+	- now able to find attribute whichever a[:attr] or a['attr']
+	- bugfix for search order of attribute
+	- search all attribute files under /attribute/ directory.
+2011-06-14: v0.8
 	- Deprecated `ChefDoWhatIMean` for naming consistency.
-	  Now use `ChefFindAny` for this purpose
+	- Now use `ChefFindAny` for this purpose
 	- Provide new command for each Finder.
 	- Now order and targets to for `ChefFindAny` is customizable.
 	- Support definition finding.
 	- Improve debug capability and code consistency.
 	- Suport hook function.
 	- Improve finders information with color highlighted messages.
-0.6	2011-06-12
+2011-06-12: v0.6
 	- Make more fuzzy for attribute finding.
-0.5	2011-06-12
+2011-06-12: v0.5
 	- First release
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:
