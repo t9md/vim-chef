@@ -1,10 +1,19 @@
 let s:Environment = {}
 
+function! s:index(list, regexp)
+  for [idx, val] in reverse(map(copy(a:list), '[v:key, v:val]'))
+    if val =~# a:regexp
+      return idx
+    endif
+  endfor
+  return -1
+endfunction
+
 function! s:Environment.new() "{{{1
     let org  = expand('%:p')
     let dirs = split(org, '/')
-    let cookbook_root = "/" . join(dirs[0: index(dirs, 'cookbooks')], '/')
-    let recipe_name   = dirs[index(dirs, 'cookbooks')+1]
+    let cookbook_root = "/" . join(dirs[0: s:index(dirs, '\v.*cookbooks')], '/')
+    let recipe_name   = dirs[s:index(dirs, '\v.*cookbooks')+1]
     let recipe_root   = cookbook_root . "/" . recipe_name
 
     let part = split(org[len(recipe_root):],'/')

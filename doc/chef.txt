@@ -155,7 +155,7 @@ CONFIGURATION						*chef-config*
 
 Requirement~
 >
-    au BufNewFile,BufRead */cookbooks/*  call s:SetupChef()
+    au BufNewFile,BufRead */*cookbooks/*  call s:SetupChef()
 <
 
 Basic~
@@ -233,9 +233,11 @@ g:chef.any_finders = <List>
 ==============================================================================
 NOTES								*chef-notes*
 
-chef.vim assume cookbooks is reside under the directory name of 'cookbooks',  
-so cookboooks in either 'my_cookbooks' nor 'cookbooks_sample' work.
-
+chef.vim asume directory which name is end with 'cookbooks' as cookbooks root
+directory.
+>
+    ex) site_cookbooks, cookbooks
+<
 ==============================================================================
 TODO							*chef-todo*
 
