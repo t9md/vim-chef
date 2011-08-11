@@ -27,7 +27,7 @@ function! s:Controller.main(...) "{{{1
     call self.debug('find finish ' . finder.id)
 
     if success
-        for s:hook in g:chef.hooks
+        for s:hook in get(g:chef, "hooks", [])
             call self.debug('calling hook ' . s:hook )
             if type(function(s:hook)) == 2
                 call call(function(s:hook),[env])
