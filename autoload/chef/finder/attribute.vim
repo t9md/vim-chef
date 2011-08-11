@@ -40,7 +40,7 @@ function! s:finder.candidate() "{{{1
     if len(attr_list) < 2
         return []
     endif 
-    let recipe_name = s:clean_attr(attr_list[0])
+    let recipe_name = substitute(attr_list[0],'[:"'']','','g')
 
     let attributes_dir = join([ self.env.path.cookbooks, recipe_name, 'attributes' ], '/')
 
@@ -76,34 +76,48 @@ function! s:scan(str, pattern) "{{{1
     return ret
 endfunction
 
-function! s:attr_quote(attr)
-    let tmp = substitute(a:attr, ":", '','g')
-    let tmp = substitute(tmp, "[", "['",'g')
-    return substitute(tmp, "]", "']",'g')
+function! s:quote(attr, quote_str) "{{{1
+  let tmp = substitute(a:attr, '[:"'']','','g')
+  let tmp = substitute(tmp, "[", "[" . a:quote_str ,'g')
+  return substitute(tmp, "]", a:quote_str . "]",'g')
 endfunction
 
-function! s:attr_symbolize(attr)
-    let tmp = substitute(a:attr, "'", '','g')
-    return substitute(tmp, "[", '[:','g')
+function! s:single_quote(attr) "{{{1
+  return s:quote(a:attr, "'")
 endfunction
 
-function! s:clean_attr(str) "{{{1
-  return substitute(a:str,'[:"'']','','g')
+function! s:double_quote(attr) "{{{1
+  return s:quote(a:attr, '"')
+endfunction
+
+function! s:symbolize(attr) "{{{1
+  if matchstr(a:attr, '[:') != ''
+    return a:attr
+  endif
+  let tmp = substitute(a:attr, '[:"'']','','g')
+  return substitute(tmp, "[", '[:','g')
 endfunction
 
 function! s:finder.attr_patterns() "{{{1
     let attr = matchlist(self.env.attr, '[.*\]')[0]
     let idx = len(attr)
+
+    let s:attr_transfunc = [
+          \ function("s:single_quote"),
+          \ function("s:double_quote"),
+          \ function("s:symbolize"),
+          \ ]
+
     let candidate = []
-    let s:attr_translator = (match(attr, ':') != -1)
-                \ ? function("s:attr_quote")
-                \ : function("s:attr_symbolize")
     while 1
         let idx = strridx(attr, ']', idx-1)
         if idx == -1| break | endif
         let org = attr[ : idx ]
         call add(candidate, org)
-        call add(candidate, call(s:attr_translator,[org]))
+        for F in s:attr_transfunc
+          call add(candidate, call(F,[org]))
+          unlet F
+        endfor
     endwhile
     return map(candidate, "escape(v:val, '[]')")
 endfunction
