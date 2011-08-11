@@ -243,7 +243,8 @@ TODO							*chef-todo*
 
 ==============================================================================
 CHANGELOG						*chef-changelog*
-
+2011-08-11:
+	- improve attribute finder
 2011-06-15: v0.9
 	- now able to find attribute whichever a[:attr] or a['attr']
 	- bugfix for search order of attribute
