@@ -3,6 +3,8 @@ let s:finder = {}
 let s:relation  = {
             \ 'recipes': "attributes",
             \ 'attributes': "recipes",
+            \ 'providers': "resources",
+            \ 'resources': "providers",
             \ }
 function s:finder.find() "{{{1
     let candidate = []

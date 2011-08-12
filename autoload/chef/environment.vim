@@ -36,6 +36,8 @@ function! s:Environment.new() "{{{1
                 \ 'cookbooks':   cookbook_root,
                 \ 'recipe':      recipe_root,
                 \ 'recipes':     recipe_root."/recipes",
+                \ 'providers':   recipe_root."/providers",
+                \ 'resources':   recipe_root."/resources",
                 \ 'files':       recipe_root."/files",
                 \ 'templates':   recipe_root."/templates",
                 \ 'attributes':  recipe_root."/attributes",

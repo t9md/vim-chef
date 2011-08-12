@@ -7,7 +7,7 @@
                 `____/  /_/ /_/   `___/  /_/
                           - easy jump to target!!
 
-Version: 0.9
+Version: 1.0
 Author : t9md <taqumd@gmail.com>
 ==============================================================================
 
@@ -45,32 +45,36 @@ COMMANDS						*chef-commands*
 * [Deprecated] ChefDoWhatIMeanSplit
 * [Deprecated] ChefDoWhatIMeanVsplit
 
-:ChefFindAny
-:ChefFindAnySplit
-:ChefFindAnyVsplit
+:ChefFindAny                                                     *:ChefFindAny*
+:ChefFindAnySplit                                           *:ChefFindAnySplit*
+:ChefFindAnyVsplit                                         *:ChefFindAnyVsplit*
 
 Find target in appropriate order.
 You can customize order and targets by|configuration|.
 
-:ChefFindAttribute
-:ChefFindAttributeSplit
-:ChefFindAttributeVsplit
+:ChefFindAttribute                                         *:ChefFindAttribute*
+:ChefFindAttributeSplit                               *:ChefFindAttributeSplit*
+:ChefFindAttributeVsplit                             *:ChefFindAttributeVsplit*
 
-:ChefFindRecipe
-:ChefFindRecipeSplit
-:ChefFindRecipeVsplit
+:ChefFindRecipe                                               *:ChefFindRecipe*
+:ChefFindRecipeSplit                                     *:ChefFindRecipeSplit*
+:ChefFindRecipeVsplit                                   *:ChefFindRecipeVsplit*
 
-:ChefFindDefinition
-:ChefFindDefinitionSplit
-:ChefFindDefinitionVsplit
+:ChefFindDefinition                                       *:ChefFindDefinition*
+:ChefFindDefinitionSplit                             *:ChefFindDefinitionSplit*
+:ChefFindDefinitionVsplit                           *:ChefFindDefinitionVsplit*
 
-:ChefFindSource
-:ChefFindSourceSplit
-:ChefFindSourceVsplit
+:ChefFindLWRP                                                   *:ChefFindLWRP*
+:ChefFindLWRP                                                   *:ChefFindLWRP*
+:ChefFindLWRP                                                   *:ChefFindLWRP*
 
-:ChefFindRelated
-:ChefFindRelatedSplit
-:ChefFindRelatedVsplit
+:ChefFindSource                                               *:ChefFindSource*
+:ChefFindSourceSplit                                     *:ChefFindSourceSplit*
+:ChefFindSourceVsplit                                   *:ChefFindSourceVsplit*
+
+:ChefFindRelated                                             *:ChefFindRelated*
+:ChefFindRelatedSplit                                   *:ChefFindRelatedSplit*
+:ChefFindRelatedVsplit                                 *:ChefFindRelatedVsplit*
 
 ==============================================================================
 USAGE							*chef-usage*
@@ -82,23 +86,23 @@ in following examples, assume~
 
 ## jump to node's attribute~
 >
-    node[:apache2][:address] = node[:nova][:my_ip]
-    ^^^^^^^^^^^^^^^^^^^^^^^
+  node[:apache2][:address] = node[:nova][:my_ip]
+  ^^^^^^^^^^^^^^^^^^^^^^^
 <
 `<M-a>` try to find that attribute appropriate order.
 
 ## open templates~
 open in `recipes/default.rb' then position cursor to
 >
-    source "grants.sql.erb"
-            ^^^^^^^^^^^^^^
+  source "grants.sql.erb"
+          ^^^^^^^^^^^^^^
 <
 `<M-a>`, try to open file under `templates/default/grants.sql.erb`
 
 ## open files~
 >
-    source "grants.sql"
-            ^^^^^^^^^^^^^^
+  source "grants.sql"
+          ^^^^^^^^^^^^^^
 <
 `<M-a>` try to open file under `files/default/grants.sql`
 
@@ -107,20 +111,25 @@ open in `recipes/default.rb' then position cursor to
 in buffer for file under `recipes/*` or `attributes/*`
 Press `<M-a>` to jump *related* files.
 For examples, jump between `recipes/default.rb` and `attributes/default.rb`
+Jump between `resources/hoge.rb` and `providers/hoge.rb` is also supported.
 
 ## open recipe files~
 >
-    include_recipe "nova::mysql"
-                    ^^^^^^^^^^
+  include_recipe "nova::mysql"
+                  ^^^^^^^^^^
 <
 `<M-a>` try to open `cookbooks/nova/recipes/mysql.rb`
 
 ## jump to definition
 
-    apache_module "authz_groupfile"
-    ^^^^^^^^^^^^^
+>
+  apache_module "authz_groupfile"
+  ^^^^^^^^^^^^^
+<
 
-apache_module is definition. so `<M-a>` would find and jump to position where defined.
+apache_module is definition. so `<M-a>` would find and jump to position where 
+defined.
+When apache_module is LWRP, chef.vim can jump to `apache/providers/module.rb`
 
 ==============================================================================
 FINDEER								*chef-finder*
@@ -131,12 +140,12 @@ You can customize what you want to find in `ChefFindAny` command.
 Following are default finder list.
 `ChefFindAny` try to find target in this order.
 >
-    [ "Attribute", "Source", "Recipe", "Definition", "Related" ]
+  [ "Attribute", "Source", "Recipe", "Definition", "LWRP", "Related" ]
 <
 If you want to exclude `Related` finder from target, set following in your `.vimrc`
 >
-    let g:chef = {}
-    let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
+  let g:chef = {}
+  let g:chef.any_finders = [ "Attribute", "Source", "Recipe", "Definition", "LWRP" ]
 <
 It's OK to remove Finder from list, but I don't recommend changing *order*.
 
@@ -223,7 +232,7 @@ g:chef.any_finders = <List>
         [ "Attribute", "Source", "Recipe", "Definition", "Related" ]
 
 
-* g:chef.hooks = <List>
+g:chef.hooks = <List>
 	List of|Function|names, which is called when finding was successfully
         completed.
 
@@ -233,7 +242,10 @@ g:chef.any_finders = <List>
 ==============================================================================
 NOTES								*chef-notes*
 
-chef.vim asume directory which name is end with 'cookbooks' as cookbooks root
+chef.vim doesn't provide `DEFAULT_KEY_MAPPING` like many other plugins do.
+So check |chef-config| section and set keymap you like. 
+
+chef.vim asume directory name end with '*cookbooks' as cookbooks root
 directory.
 >
     ex) site_cookbooks, cookbooks
@@ -243,6 +255,9 @@ TODO							*chef-todo*
 
 ==============================================================================
 CHANGELOG						*chef-changelog*
+2011-08-13: v1.0
+        - new finder LWRP.
+        - jump between resources and providers are introduced.
 2011-08-11:
 	- improve attribute finder
 2011-06-15: v0.9
