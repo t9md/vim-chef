@@ -34,7 +34,7 @@ if !has_key(g:chef, 'hooks')
     let g:chef.hooks = []
 endif
 if !has_key(g:chef, 'any_finders')
-    let g:chef.any_finders = [ "Attribute", "Source", "Recipe", "Definition", "Related" ]
+    let g:chef.any_finders = [ "Attribute", "Source", "Recipe", "Definition", "LWRP", "Related" ]
 endif
 
 
@@ -59,6 +59,10 @@ command! ChefFindRecipeVsplit     :call chef#controller#findRecipe('vsplit')
 command! ChefFindDefinition       :call chef#controller#findDefinition()
 command! ChefFindDefinitionSplit  :call chef#controller#findDefinition('split')
 command! ChefFindDefinitionVsplit :call chef#controller#findDefinition('vsplit')
+
+command! ChefFindLWRP             :call chef#controller#findLWRP()
+command! ChefFindLWRP             :call chef#controller#findLWRP('split')
+command! ChefFindLWRP             :call chef#controller#findLWRP('vsplit')
 
 command! ChefFindSource           :call chef#controller#findSource()
 command! ChefFindSourceSplit      :call chef#controller#findSource('split')
