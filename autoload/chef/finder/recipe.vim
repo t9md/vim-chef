@@ -1,6 +1,6 @@
 let s:finder = {}
 
-function s:finder.condition() "{{{1
+function! s:finder.condition() "{{{1
     let val1 = (self.env.line =~# '\<include_recipe\>' && self.env.cword !=# 'include_recipe')
     if  val1 | return 1 | endif
 
@@ -10,7 +10,7 @@ function s:finder.condition() "{{{1
     if  val2 | return 1 | endif
 endfunction
 
-function s:finder.find() "{{{1
+function! s:finder.find() "{{{1
     let [recipe ;node_part ] = split(self.env.cword, "::")
 
     call self.debug(string([recipe, node_part]))

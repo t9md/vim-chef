@@ -1,11 +1,11 @@
 let s:finder = {}
 
-function s:finder.condition() "{{{1
+function! s:finder.condition() "{{{1
     " echo s:definition_names()
     return index(self.definition_names(), ":" . self.env.cword) != -1
 endfunction
 
-function s:finder.find() "{{{1
+function! s:finder.find() "{{{1
     " call self.debug(self.definition_table())
     let ident = ':' . self.env.cword
     call self.debug("search " . ident)

@@ -1,6 +1,6 @@
 let s:Environment = {}
 
-function! s:index(list, regexp)
+function! s:index(list, regexp) "{{{1
   for [idx, val] in reverse(map(copy(a:list), '[v:key, v:val]'))
     if val =~# a:regexp
       return idx

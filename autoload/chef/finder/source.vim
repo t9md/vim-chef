@@ -1,10 +1,10 @@
 let s:finder = {}
 
-function s:finder.condition() "{{{1
+function! s:finder.condition() "{{{1
     return (self.env.line =~# '\s\+source\>' && self.env.cword !=# 'source')
 endfunction
 
-function s:finder.find() "{{{1
+function! s:finder.find() "{{{1
     let type = self.env.ext == 'erb' ? 'templates' : 'files'
     let fpath = join([self.env.path.recipe , type, 'default' , self.env.cfile ], '/')
     if isdirectory(fpath) || filereadable(fpath)

@@ -1,12 +1,12 @@
 let s:finder = {}
 
-function s:finder.condition()  "{{{1
+function! s:finder.condition()  "{{{1
     let self.env.attr = s:extract_attribute(self.env.cWORD)
     call self.debug('extracted attr is ' . self.env.attr)
     return !empty(self.env.attr)
 endfunction
 
-function s:finder.find() "{{{1
+function! s:finder.find() "{{{1
     let found_attribute = 0
     try "{{{
         for pattern in self.attr_patterns()

@@ -1,10 +1,10 @@
 let s:finder = {}
 
-function s:finder.condition() "{{{1
+function! s:finder.condition() "{{{1
     return index(self.lwrp_names(), self.env.cword) != -1
 endfunction
 
-function s:finder.find() "{{{1
+function! s:finder.find() "{{{1
     let ident = self.env.cword
     call self.debug("search " . ident)
 
