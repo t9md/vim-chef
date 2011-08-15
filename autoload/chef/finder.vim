@@ -16,7 +16,7 @@ endfunction
 
 function! s:finderBase.edit(fpath) "{{{1
     silent execute self.env.editcmd . ' ' . a:fpath
-    " call self.path_hl(a:fpath)
+    call self.path_hl(a:fpath)
 endfunction
 
 function! s:finderBase.path_hl(fpath) "{{{1
