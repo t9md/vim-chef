@@ -74,10 +74,10 @@ command! ChefFindRelatedVsplit    :call chef#controller#findRelated('vsplit')
 
 " AutoCmd: {{{1
 "=================================================================
-" augroup Chef
-    " autocmd!
-    " autocmd! BufNewFile,BufRead */*cookbooks/*  call chef#finder#update_echoline('<afile>')
-" augroup END
+augroup Chef
+    autocmd!
+    autocmd! BufEnter */*cookbooks/* call chef#finder#update_echoline(expand('<afile>:p'))
+augroup END
 
 " Finalize: {{{1
 "=================================================================

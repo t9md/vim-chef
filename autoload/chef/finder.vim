@@ -16,7 +16,7 @@ endfunction
 
 function! s:finderBase.edit(fpath) "{{{1
     silent execute self.env.editcmd . ' ' . a:fpath
-    call self.path_hl(a:fpath)
+    " call self.path_hl(a:fpath)
 endfunction
 
 function! s:finderBase.path_hl(fpath) "{{{1
@@ -28,7 +28,7 @@ function! s:finderBase.path_hl(fpath) "{{{1
 endfunction
 
 let s:color_table = {
-            \ 'recipes':    "Function",
+            \ 'recipes':    "Identifier",
             \ 'attributes': "Keyword",
             \ 'templates':  "Define",
             \ 'files':      "Define",
@@ -71,10 +71,33 @@ function! s:finderBase.debug(msg) "{{{1
     echo "[". self.id ."] " . string(a:msg)
 endfunction
 
-" function! chef#finder#update_echoline(path) "{{{1
-    " echo a:path
-    " echo a:path
-" endfunction
+function! s:msghl(msgs, sep) "{{{1
+    let last = len(a:msgs) - 1
+    for idx in range(len(a:msgs))
+        let [msg, hl] = a:msgs[idx]
+        silent execute 'echohl ' . hl
+        echon msg
+        echohl Normal
+        if ! (idx == last)
+            echon a:sep
+        endif
+    endfor
+    echohl Normal
+endfunction
+
+function! chef#finder#update_echoline(path) "{{{1
+    let env = chef#environment#new()
+    let path_str = a:path[len(env.path.cookbooks) + 1 : ]
+    let splitted = split(path_str, '/')
+    if len(splitted) < 3
+        echo " "
+        return
+    endif
+    let [ recipe, type; rest ] = split(path_str, '/')
+    let type_color = get(s:color_table, type, 'Special')
+    let msgs = [[ recipe, "Directory" ], [ type, type_color ], [join(rest,'/'), 'Normal']]
+    call s:msghl(msgs, '/')
+endfunction
 
 function! chef#finder#new(finder) "{{{1
     let finder = s:finderBase.new(a:finder)
