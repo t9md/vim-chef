@@ -68,6 +68,13 @@ command! ChefFindRelated          :call chef#controller#findRelated()
 command! ChefFindRelatedSplit     :call chef#controller#findRelated('split')
 command! ChefFindRelatedVsplit    :call chef#controller#findRelated('vsplit')
 
+" AutoCmd: {{{1
+"=================================================================
+" augroup Chef
+    " autocmd!
+    " autocmd! BufNewFile,BufRead */*cookbooks/*  call chef#finder#update_echoline('<afile>')
+" augroup END
+
 " Finalize: {{{1
 "=================================================================
 let &cpo = s:old_cpo

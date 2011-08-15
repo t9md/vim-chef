@@ -28,14 +28,17 @@ function! s:finderBase.path_hl(fpath) "{{{1
 endfunction
 
 let s:color_table = {
-            \ 'recipes':    "Identifier",
-            \ 'attributes': "vimCommand",
-            \ 'templates':  "PreProc",
-            \ 'files':      "PreProc"
+            \ 'recipes':    "Function",
+            \ 'attributes': "Keyword",
+            \ 'templates':  "Define",
+            \ 'files':      "Define",
+            \ 'definitions': "String",
+            \ 'providers':   "String",
+            \ 'resources':   "String",
             \ }
 
 function! s:finderBase.msghl(msgs, sep) "{{{1
-    echohl Function
+    echohl Identifier
     echo "[". self.id ."] "
     let last = len(a:msgs) - 1
     for idx in range(len(a:msgs))
@@ -67,6 +70,11 @@ function! s:finderBase.debug(msg) "{{{1
     endif
     echo "[". self.id ."] " . string(a:msg)
 endfunction
+
+" function! chef#finder#update_echoline(path) "{{{1
+    " echo a:path
+    " echo a:path
+" endfunction
 
 function! chef#finder#new(finder) "{{{1
     let finder = s:finderBase.new(a:finder)
