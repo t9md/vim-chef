@@ -83,6 +83,11 @@ function! chef#controller#findDefinition(...) "{{{1
     call call(s:Controller.main, a:000, s:Controller)
 endfunction
 
+function! chef#controller#findLWRP(...) "{{{1
+    let s:Controller.finders = [ s:finder_for("LWRP") ]
+    call call(s:Controller.main, a:000, s:Controller)
+endfunction
+
 function! chef#controller#findRelated(...) "{{{1
     let s:Controller.finders = [ s:finder_for("Related") ]
     call call(s:Controller.main, a:000, s:Controller)

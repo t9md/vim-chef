@@ -1,6 +1,6 @@
 let s:Environment = {}
 
-function! s:index(list, regexp)
+function! s:index(list, regexp) "{{{1
   for [idx, val] in reverse(map(copy(a:list), '[v:key, v:val]'))
     if val =~# a:regexp
       return idx
@@ -36,6 +36,8 @@ function! s:Environment.new() "{{{1
                 \ 'cookbooks':   cookbook_root,
                 \ 'recipe':      recipe_root,
                 \ 'recipes':     recipe_root."/recipes",
+                \ 'providers':   recipe_root."/providers",
+                \ 'resources':   recipe_root."/resources",
                 \ 'files':       recipe_root."/files",
                 \ 'templates':   recipe_root."/templates",
                 \ 'attributes':  recipe_root."/attributes",
