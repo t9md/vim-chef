@@ -50,7 +50,7 @@ COMMANDS						*chef-commands*
 :ChefFindAnyVsplit                                         *:ChefFindAnyVsplit*
 
 Find target in appropriate order.
-You can customize order and targets by|configuration|.
+You can customize order and targets by |configuration|.
 
 :ChefFindAttribute                                         *:ChefFindAttribute*
 :ChefFindAttributeSplit                               *:ChefFindAttributeSplit*
@@ -65,8 +65,8 @@ You can customize order and targets by|configuration|.
 :ChefFindDefinitionVsplit                           *:ChefFindDefinitionVsplit*
 
 :ChefFindLWRP                                                   *:ChefFindLWRP*
-:ChefFindLWRP                                                   *:ChefFindLWRP*
-:ChefFindLWRP                                                   *:ChefFindLWRP*
+:ChefFindLWRPSplit                                         *:ChefFindLWRPSplit*
+:ChefFindLWRPVSplit                                       *:ChefFindLWRPVSplit*
 
 :ChefFindSource                                               *:ChefFindSource*
 :ChefFindSourceSplit                                     *:ChefFindSourceSplit*
