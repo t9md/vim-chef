@@ -7,9 +7,9 @@
 
 " GUARD: {{{1
 "============================================================
-" if exists('g:loaded_chef')
-  " finish
-" endif
+if exists('g:loaded_chef')
+  finish
+endif
 
 let g:loaded_chef = 1
 let s:old_cpo = &cpo
